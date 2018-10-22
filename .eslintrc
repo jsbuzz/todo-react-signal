@@ -1,0 +1,30 @@
+{
+  "parser": "babel-eslint",
+  "plugins": ["react", "jest"],
+  "extends": ["airbnb"],
+  "globals": {
+    "React": true,
+    "document": true,
+    "window": true,
+    "localStorage": true,
+  },
+  "root": true,
+  "rules": {
+    "indent": ["warn", 2],
+    "no-restricted-syntax": "off",
+    "react/prefer-stateless-function": "warn",
+    "react/self-closing-comp": [
+      "warn",
+      {
+        "component": true,
+        "html": false
+      }
+    ],
+  },
+  "env": {
+    "es6": true,
+    "jest": true,
+    "browser": true,
+    "node": true
+  }
+}
