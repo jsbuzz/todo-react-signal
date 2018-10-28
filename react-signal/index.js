@@ -30,7 +30,7 @@ const connectFunction = (fn, namespace, events) => (props) => fn(
   }
 );
 
-const Connect = (component, selector = null, namespace = null, events = null) => {
+const Connect = (component, selector = null, events = null, namespace = null) => {
   let ConnectedComponent = Enable(component);
 
   if (selector) {
@@ -39,7 +39,7 @@ const Connect = (component, selector = null, namespace = null, events = null) =>
 
   const HiveComponent = (props) => (
     <NamespaceCtx.Consumer>
-      { ctx => <ConnectedComponent {...props} namespace={ctx} /> }
+      { ctx => <ConnectedComponent {...props} namespace={ctx || props.namespace} /> }
     </NamespaceCtx.Consumer>
   );
   HiveComponent.displayName = `~${ConnectedComponent.displayName}`;
@@ -48,9 +48,9 @@ const Connect = (component, selector = null, namespace = null, events = null) =>
 };
 
 export const Enable = (component) => {
-  let ConnectedComponent = component.prototype.render
+  let ConnectedComponent = component.prototype && component.prototype.render
     ? connectComponent(component)
-    : connectFunction(component)
+    : connectFunction(component.type || component)
     ;
 
   ConnectedComponent.displayName = component.name;

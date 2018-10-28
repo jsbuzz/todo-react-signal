@@ -20,6 +20,8 @@
         "html": false
       }
     ],
+    "no-plusplus" : "off",
+    "object-curly-newline" : "off",
   },
   "env": {
     "es6": true,

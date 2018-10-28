@@ -2,6 +2,24 @@
 <head>
   <link rel="stylesheet" href="http://todomvc.com/examples/vue/node_modules/todomvc-common/base.css">
 	<link rel="stylesheet" href="http://todomvc.com/examples/vue/node_modules/todomvc-app-css/index.css">
+  <style>
+    .todo-list li .edit-title {
+      display: none;
+      position: absolute;
+      top: 7px;
+      left: 52px;
+      width: 75%;
+      word-break: break-all;
+      padding: 7px;
+      line-height: 1.2;
+      transition: color 0.4s;
+      font-size: 22px;
+      border: 0;
+    }
+    .todo-list li.edited .edit-title {
+      display: block;
+    }
+  </style>
 </head>
 <body>
     <div id="mount"></div>

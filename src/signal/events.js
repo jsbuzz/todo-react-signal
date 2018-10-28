@@ -1,25 +1,21 @@
-import { Event } from '../../react-signal/event-hive/event';
+import { defineEventType } from '../../react-signal/event-hive/event-type';
+import { basicEvent } from '../../react-signal/event-hive/event';
 
-export const AddTodoEvent = class extends Event {
-  constructor(title) {
-    super();
-    this.title = title;
-  }
-};
-export const IdEvent = class extends Event {
-  constructor(id) {
-    super();
-    this.id = id;
-  }
-};
+export const AddTodoEvent = defineEventType({
+  title: String,
+});
 
-export const ErrorEvent = class extends Event {
-  constructor(error) {
-    super();
-    this.error = error;
-  }
-};
+export const TodoEvent = defineEventType({
+  todo: Object,
+});
+
+export const IdEvent = defineEventType({
+  id: Number,
+});
 
 export const AddTodo = AddTodoEvent.withAlias('Todo:add');
 export const RemoveTodo = IdEvent.withAlias('Todo:remove');
-export const ToggleTodo = IdEvent.withAlias('Todo:toggle');
+export const UpdateTodo = TodoEvent.withAlias('Todo:update');
+export const TodoAdded = IdEvent.withAlias('Todo:added');
+
+export const TodoUpdated = id => basicEvent(`Todo:Updated#${id}`);

@@ -29,7 +29,7 @@ const StateConnector = (NameSpace, selector, events, WrappedComponent) => {
           this.watchedProps.forEach(prop => {
             if (typeof this.namespace().state[prop] === 'undefined') {
               this.watchedProps = null;
-              console.warn(`${WrappedComponent.displayName} was connected with property watcher '${prop}' that is missing from state`);
+              console.warn(`${WrappedComponent.displayName} was connected with property watcher '${prop}' that is missing from state`, this.namespace().state);
             }
           })
         }
@@ -39,7 +39,7 @@ const StateConnector = (NameSpace, selector, events, WrappedComponent) => {
     checkState() {
       if (this.watchedProps) {
         for (let prop of this.watchedProps) {
-          if (this.namespace().__propsChanged.includes(prop)) {
+          if (this.namespace().__propsChanged[prop]) {
             Control.logRerender(this, prop);
             this.forceUpdate();
             break ;
