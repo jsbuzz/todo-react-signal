@@ -1,4 +1,6 @@
+
 const Control = {
+  logging: false,
   actor: null,
   withActor: (actor, ns) => { Control.actor = actor; return ns; },
   registerListener: (eventPool, eventName, listener) => {
@@ -14,6 +16,8 @@ const Control = {
     });
   },
   logTriggerSync: (hiveEvent) => {
+    if (!Control.logging) return;
+
     if (hiveEvent.name === 'NameSpace:StateChanged') {
       console.log(
         Control.actor.name, 'triggered', hiveEvent.name,
@@ -27,6 +31,8 @@ const Control = {
     }
   },
   logCallback: (actor, fn, event) => {
+    if (!Control.logging) return;
+
     if (actor.displayName && actor.displayName.substr(0, 15) === 'StateConnector(') {
       console.log('-->', actor.displayName, 'checking changes', `<-[${event.name}]`);
     } else {
@@ -34,6 +40,8 @@ const Control = {
     }
   },
   logRerender: (stateConnector, prop) => {
+    if (!Control.logging) return;
+
     console.log('   ', stateConnector.displayName, 're-rendering because', prop, 'changed');
   },
 }
@@ -45,7 +53,7 @@ function fnName(fn) {
 
   if (fn.name) return fn.name + propName;
 
-  const def = fn.toString().match(/_this2\.([a-zA-Z_$]+)\(/i);
+  const def = fn.toString().match(/_this[0-9]?\.([a-zA-Z_$]+)\(/i);
 
   return def && (def.length > 1)
     ? `'${def[1]}${propName}'`

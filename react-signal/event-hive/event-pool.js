@@ -1,44 +1,47 @@
 import ListenerChain from './listener-chain';
 
+/* eslint import/prefer-default-export: 0 */
+/* eslint no-unused-expressions: 0 */
 export class EventPool {
-    constructor() {
-        this.events = new Map();
+  constructor() {
+    this.events = new Map();
+  }
+
+  addEventListener(eventName, listener, prepend = false) {
+    // console.log('addEventListener', eventName, listener);
+    if (prepend) {
+      this.events.set(
+        eventName,
+        ListenerChain.with(
+          listener, this.events.get(eventName),
+        ),
+      );
+      return;
     }
-
-    addEventListener(eventName, listener, prepend = false) {
-        // console.log('addEventListener', eventName, listener);
-        if (prepend) {
-            return this.events.set(
-                eventName,
-                ListenerChain.with(
-                    listener, this.events.get(eventName)
-                )
-            );
-        }
-        if (this.events.has(eventName)) {
-            this.events.get(eventName).add(listener);
-        } else {
-            this.events.set(eventName, ListenerChain.with(listener))
-        }
+    if (this.events.has(eventName)) {
+      this.events.get(eventName).add(listener);
+    } else {
+      this.events.set(eventName, ListenerChain.with(listener));
     }
+  }
 
-    removeEventListener(eventName, listener) {
-        console.log('removeEventListener', eventName, listener);
-        let chain = this.events.get(eventName);
+  removeEventListener(eventName, listener) {
+    // console.log('removeEventListener', eventName, listener);
+    const chain = this.events.get(eventName);
 
-        if(chain) {
-            let newChain = chain.without(listener);
+    if (chain) {
+      const newChain = chain.without(listener);
 
-            if(newChain) {
-                this.events.set(eventName, newChain);
-            } else {
-                this.events.delete(eventName);
-            }
-        }
+      if (newChain) {
+        this.events.set(eventName, newChain);
+      } else {
+        this.events.delete(eventName);
+      }
     }
+  }
 
-    dispatchEvent(fiberEvent) {
-        const chain = this.events.get(fiberEvent.name);
-        chain && chain.execute(fiberEvent);
-    }
+  dispatchEvent(fiberEvent) {
+    const chain = this.events.get(fiberEvent.name);
+    chain && chain.execute(fiberEvent);
+  }
 }

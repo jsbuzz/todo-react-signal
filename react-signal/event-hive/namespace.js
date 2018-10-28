@@ -11,68 +11,87 @@ export const InitState = basicEvent('NameSpace:InitState');
 export const StateChanged = basicEvent('NameSpace:StateChanged');
 // export const StateChanged = defineEvent(StateEvent, 'NameSpace:StateChanged');
 
+/* eslint no-underscore-dangle: 0 */
+/* eslint no-unused-expressions: 0 */
+/* eslint prefer-destructuring: 0 */
 export class NameSpace extends EventGateway {
+  constructor(name) {
+    super();
+    this.name = name;
+    this.__sendStateUpdates = false;
+  }
 
-    constructor(name) {
-        super();
-        this.name = name;
-        this.__sendStateUpdates = false;
+  defineState(stateDefinition, readonly = true) {
+    Control.actor = this;
+    let state;
+
+    if (readonly) {
+      this.__state || (this.__state = new ReadOnly());
+      this.state = this.__state.reader;
+      state = this.__state;
+    } else {
+      this.state = {};
+      state = this.state;
     }
 
-    defineState(stateDefinition) {
-        Control.actor = this;
-        this.__state || (this.__state = new ReadOnly());
-        this.state = this.__state.reader;
-        Object.getOwnPropertyNames(stateDefinition).forEach((property) => {
-            this.__state.addProperty(property);
-            const setters = stateDefinition[property](this.__state.modifier, property);
-            for (let i = 0; i < setters.length; i+=2) {
-                const setter = (event) => {
-                    setters[i+1](event);
-                    if (this.__sendStateUpdates) {
-                        event.promise.then(() => {
-                            if (this.__sendStateUpdatesBouncer) {
-                                global.clearTimeout(this.__sendStateUpdatesBouncer);
-                            }
-                            this.__propsChanged.push(property);
-                            this.__sendStateUpdatesBouncer = global.setTimeout(
-                                () => {
-                                    Control.withActor(
-                                        this, this
-                                    ).triggerSync(new StateChanged());
-                                    this.__sendStateUpdatesBouncer = null;
-                                    this.__propsChanged = [];
-                                },
-                                0
-                            );
-                        });
-                    }
-                };
-                setter.__property = property;
-                this.addEventListener(setters[i], setter, true);
-            }
-        });
-
-        this.__propsChanged = [];
-        this.triggerSync(new InitState());
-    }
-
-    addEventListener(fiberEvent, eventHandler, prepend = false) {
-      super.addEventListener(fiberEvent, eventHandler, prepend);
-      if (fiberEvent === StateChanged) {
-        this.__sendStateUpdates = true;
+    Object.getOwnPropertyNames(stateDefinition).forEach((property) => {
+      if (readonly) {
+        this.__state.addProperty(property);
       }
+      const setters = stateDefinition[property];
+      for (let i = 0; i < setters.length; i += 2) {
+        const callback = setters[i + 1];
+        const setter = (event) => {
+          if (readonly) {
+            this.__state.set(property, callback(this.__state.modifier[property])(event));
+          } else {
+            state[property] = callback(state[property])(event);
+          }
+
+          if (this.__sendStateUpdates) {
+            event.promise.then(() => {
+              if (this.__sendStateUpdatesBouncer) {
+                global.clearTimeout(this.__sendStateUpdatesBouncer);
+              }
+              this.__propsChanged[property] = true;
+              this.__sendStateUpdatesBouncer = global.setTimeout(
+                () => {
+                  Control.withActor(
+                    this, this,
+                  ).triggerSync(new StateChanged());
+                  this.__sendStateUpdatesBouncer = null;
+                  this.__propsChanged = {};
+                },
+                0,
+              );
+            });
+          }
+        };
+        setter.__property = property;
+        this.addEventListener(setters[i], setter, true);
+      }
+    });
+
+    this.__propsChanged = {};
+    this.triggerSync(new InitState());
+  }
+
+  addEventListener(fiberEvent, eventHandler, prepend = false) {
+    super.addEventListener(fiberEvent, eventHandler, prepend);
+    if (fiberEvent === StateChanged) {
+      this.__sendStateUpdates = true;
     }
+  }
 
-    static get(name) {
-        this.namespaces || (this.namespaces = new Map());
+  static get(name) {
+    this.namespaces || (this.namespaces = new Map());
 
-        let namespace = this.namespaces.get(name);
+    let namespace = this.namespaces.get(name);
 
-        if (!namespace) {
-            namespace = new NameSpace(name);
-            this.namespaces.set(name, namespace);
-        }
-        return namespace;
+    if (!namespace) {
+      namespace = new NameSpace(name);
+      this.namespaces.set(name, namespace);
     }
+    return namespace;
+  }
 }
