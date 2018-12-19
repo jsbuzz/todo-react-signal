@@ -11,14 +11,20 @@ export const InitState = basicEvent('NameSpace:InitState');
 export const StateChanged = basicEvent('NameSpace:StateChanged');
 // export const StateChanged = defineEvent(StateEvent, 'NameSpace:StateChanged');
 
+export const setValue = value => () => () => value;
+
 /* eslint no-underscore-dangle: 0 */
 /* eslint no-unused-expressions: 0 */
 /* eslint prefer-destructuring: 0 */
 export class NameSpace extends EventGateway {
-  constructor(name) {
+  constructor(name, stateDefinition) {
     super();
     this.name = name;
     this.__sendStateUpdates = false;
+
+    if (stateDefinition) {
+      this.defineState(stateDefinition);
+    }
   }
 
   defineState(stateDefinition, readonly = true) {
@@ -84,12 +90,16 @@ export class NameSpace extends EventGateway {
   }
 
   static get(name) {
+    return this.create(name);
+  }
+
+  static create(name, stateDefinition) {
     this.namespaces || (this.namespaces = new Map());
 
     let namespace = this.namespaces.get(name);
 
     if (!namespace) {
-      namespace = new NameSpace(name);
+      namespace = new NameSpace(name, stateDefinition);
       this.namespaces.set(name, namespace);
     }
     return namespace;

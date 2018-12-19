@@ -5,6 +5,7 @@ import StateConnector from './connect/StateConnector';
 
 export const NamespaceCtx = React.createContext();
 
+// what's better for this usecase, composition or inheritence?
 const connectComponent = ComponentClass => class extends ComponentClass {
   on = ns => Control.withActor(this, ns)
 

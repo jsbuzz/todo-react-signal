@@ -1,14 +1,10 @@
-import { NameSpace, InitState } from '../../react-signal/event-hive/namespace';
+import { NameSpace, InitState, setValue } from '../../react-signal/event-hive/namespace';
 import {
   AddTodo, RemoveTodo, UpdateTodo,
 } from './events';
 
-const TodoSpace = NameSpace.get('Ns.Todos');
-
 let todoId = 0;
-const setValue = value => () => () => value;
-
-TodoSpace.defineState({
+const TodoSpace = NameSpace.create('Ns.Todos', {
   todos: [
     InitState, setValue(new Map()),
     AddTodo, todos => ({ title }) => {
