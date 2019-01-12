@@ -15,10 +15,14 @@ export const StateChanged = basicEvent('NameSpace:StateChanged');
 /* eslint no-unused-expressions: 0 */
 /* eslint prefer-destructuring: 0 */
 export class NameSpace extends EventGateway {
-  constructor(name) {
+  constructor(name, stateDefinition) {
     super();
     this.name = name;
     this.__sendStateUpdates = false;
+
+    if (stateDefinition) {
+      this.defineState(stateDefinition);
+    }
   }
 
   defineState(stateDefinition, readonly = true) {
@@ -84,14 +88,21 @@ export class NameSpace extends EventGateway {
   }
 
   static get(name) {
+    return this.create(name);
+  }
+
+  static create(name, stateDefinition) {
     this.namespaces || (this.namespaces = new Map());
 
     let namespace = this.namespaces.get(name);
 
     if (!namespace) {
-      namespace = new NameSpace(name);
+      namespace = new NameSpace(name, stateDefinition);
       this.namespaces.set(name, namespace);
     }
     return namespace;
   }
 }
+
+export const set = value => () => () => value;
+export const modify = fn => value => payload => {fn(value)(payload); return value;};
