@@ -11,8 +11,6 @@ export const InitState = basicEvent('NameSpace:InitState');
 export const StateChanged = basicEvent('NameSpace:StateChanged');
 // export const StateChanged = defineEvent(StateEvent, 'NameSpace:StateChanged');
 
-export const setValue = value => () => () => value;
-
 /* eslint no-underscore-dangle: 0 */
 /* eslint no-unused-expressions: 0 */
 /* eslint prefer-destructuring: 0 */
@@ -105,3 +103,6 @@ export class NameSpace extends EventGateway {
     return namespace;
   }
 }
+
+export const set = value => () => () => value;
+export const modify = fn => value => payload => {fn(value)(payload); return value;};
