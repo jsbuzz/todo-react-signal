@@ -18,5 +18,3 @@ export default () => (
     </section>
   </NameSpaceContext>
 );
-
-// 0658940784
