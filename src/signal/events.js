@@ -9,7 +9,7 @@ export const TodoEvent = defineEventType({
   todo: Object
 });
 
-export const TodoListEvent = defineEventType({
+export const TodoRestoreEvent = defineEventType({
   savedTodos: Array
 });
 
@@ -20,7 +20,7 @@ export const IdEvent = defineEventType({
 export const AddTodo = AddTodoEvent.withAlias('Todo:add');
 export const RemoveTodo = IdEvent.withAlias('Todo:remove');
 export const UpdateTodo = TodoEvent.withAlias('Todo:update');
-export const RestoreTodos = TodoListEvent.withAlias('Todo:restore');
+export const RestoreTodos = TodoRestoreEvent.withAlias('Todo:restore');
 
 export const TodoAdded = IdEvent.withAlias('Todo:added');
 

@@ -1,12 +1,11 @@
+import Service from '../../react-signal/Service';
 import { StateChanged } from '../../react-signal/event-hive/namespace';
 import { RestoreTodos } from '../signal/events';
 
 const STORE_KEY = 'state-guard:todos';
 
-class StateGuard {
+class StateGuard extends Service {
   listen() {
-    console.log('StateGuard:listen');
-
     this.restoreTodos();
 
     this.namespace().listen(StateChanged, () => this.saveState());

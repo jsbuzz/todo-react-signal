@@ -11,11 +11,9 @@ class NameSpaceContext extends Component {
     if (!services) return;
 
     ( services.length ? services : [ services ]).forEach((Service) => {
-      const instance = new Service();
+      const instance = new Service(namespace);
       if (!instance.listen) return;
 
-      instance.on = (ns) => Control.withActor(instance, ns);
-      instance.namespace = () => Control.withActor(instance, namespace);
       instance.displayName = Service.name;
 
       Control.actor = instance;
