@@ -8,9 +8,9 @@ const NewTodo = (props, namespace) => (
     autoComplete="off"
     placeholder="What needs to be done?"
     className="new-todo"
-    onKeyUp={(keyup) => {
+    onKeyUp={keyup => {
       const { currentTarget, keyCode } = keyup;
-      if (keyCode === 13) {
+      if (keyCode === 13 && currentTarget.value.length) {
         namespace().trigger(AddTodo.with(currentTarget.value));
         currentTarget.value = '';
       }

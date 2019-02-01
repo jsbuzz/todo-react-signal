@@ -11,9 +11,6 @@ export const InitState = basicEvent('NameSpace:InitState');
 export const StateChanged = basicEvent('NameSpace:StateChanged');
 // export const StateChanged = defineEvent(StateEvent, 'NameSpace:StateChanged');
 
-/* eslint no-underscore-dangle: 0 */
-/* eslint no-unused-expressions: 0 */
-/* eslint prefer-destructuring: 0 */
 export class NameSpace extends EventGateway {
   constructor(name, stateDefinition) {
     super();
@@ -38,16 +35,19 @@ export class NameSpace extends EventGateway {
       state = this.state;
     }
 
-    Object.getOwnPropertyNames(stateDefinition).forEach((property) => {
+    Object.getOwnPropertyNames(stateDefinition).forEach(property => {
       if (readonly) {
         this.__state.addProperty(property);
       }
       const setters = stateDefinition[property];
       for (let i = 0; i < setters.length; i += 2) {
         const callback = setters[i + 1];
-        const setter = (event) => {
+        const setter = event => {
           if (readonly) {
-            this.__state.set(property, callback(this.__state.modifier[property])(event));
+            this.__state.set(
+              property,
+              callback(this.__state.modifier[property])(event)
+            );
           } else {
             state[property] = callback(state[property])(event);
           }
@@ -58,16 +58,11 @@ export class NameSpace extends EventGateway {
                 global.clearTimeout(this.__sendStateUpdatesBouncer);
               }
               this.__propsChanged[property] = true;
-              this.__sendStateUpdatesBouncer = global.setTimeout(
-                () => {
-                  Control.withActor(
-                    this, this,
-                  ).triggerSync(new StateChanged());
-                  this.__sendStateUpdatesBouncer = null;
-                  this.__propsChanged = {};
-                },
-                0,
-              );
+              this.__sendStateUpdatesBouncer = global.setTimeout(() => {
+                Control.withActor(this, this).triggerSync(new StateChanged());
+                this.__sendStateUpdatesBouncer = null;
+                this.__propsChanged = {};
+              }, 0);
             });
           }
         };
@@ -105,4 +100,7 @@ export class NameSpace extends EventGateway {
 }
 
 export const set = value => () => () => value;
-export const modify = fn => value => payload => {fn(value)(payload); return value;};
+export const modify = fn => value => payload => {
+  fn(value)(payload);
+  return value;
+};
