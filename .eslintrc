@@ -1,12 +1,11 @@
 {
   "parser": "babel-eslint",
   "plugins": ["react", "jest"],
-  "extends": ["airbnb"],
   "globals": {
     "React": true,
     "document": true,
     "window": true,
-    "localStorage": true,
+    "localStorage": true
   },
   "root": true,
   "rules": {
@@ -20,8 +19,8 @@
         "html": false
       }
     ],
-    "no-plusplus" : "off",
-    "object-curly-newline" : "off",
+    "no-plusplus": "off",
+    "object-curly-newline": "off"
   },
   "env": {
     "es6": true,
