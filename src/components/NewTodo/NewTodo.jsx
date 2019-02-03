@@ -1,8 +1,7 @@
 import React from 'react';
 import { AddTodo } from '../../signal/events';
 
-let id = 0;
-const NewTodo = (props, namespace) => (
+const NewTodo = (_, namespace) => (
   <input
     autoFocus="autofocus"
     autoComplete="off"

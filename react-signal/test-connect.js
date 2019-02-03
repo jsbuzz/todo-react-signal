@@ -1,5 +1,4 @@
 import { EventGateway } from './event-hive/event-gateway';
-import Control from './event-hive/control';
 
 export class TestNameSpace extends EventGateway {
   events = [];
@@ -41,18 +40,24 @@ export class TestNameSpace extends EventGateway {
   }
 };
 
-// export const TestConnect = (fn, NS = new TestNameSpace()) => (props) => fn(
-//   props, (ns) => (ns || NS)
-// );
+export const connectFunction = (fn, NS = new TestNameSpace()) => (props) => fn(
+  props, (ns) => (ns || NS)
+);
 
-export const TestConnect = (ComponentClass, NS = new TestNameSpace()) => class extends ComponentClass {
+export const connectComponent = (ComponentClass, NS = new TestNameSpace()) => class extends ComponentClass {
   on = (ns) => NS.withNamespace(ns);
   namespace = () => NS.withNamespace(NS);
-
-  // componentDidMount(...stuff) {
-  //   super.componentDidMount && super.componentDidMount(...stuff);
-  //
-  //   this.listen && this.listen();
-  //   this.displayName = ComponentClass.name;
-  // }
 };
+
+const Connect = (component, NS) => {
+  let ConnectedComponent = component.prototype && component.prototype.render
+    ? connectComponent(component, NS)
+    : connectFunction(component.type || component, NS)
+    ;
+
+  ConnectedComponent.displayName = component.name;
+
+  return ConnectedComponent;
+};
+
+export default Connect;
