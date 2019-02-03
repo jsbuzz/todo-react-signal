@@ -6,7 +6,7 @@ import TodoSpace from './signal/namespace';
 import NewTodo from './components/NewTodo';
 import TodoList from './components/TodoList';
 
-import StateGuard from './services/state-guard';
+import StateGuard from './services/StateGuard';
 
 export default () => (
   <NameSpaceContext namespace={TodoSpace} services={[StateGuard]}>
