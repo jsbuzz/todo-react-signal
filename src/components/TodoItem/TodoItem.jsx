@@ -5,8 +5,6 @@ import { RemoveTodo, UpdateTodo } from '../../signal/events';
 import CheckBox from './CheckBox';
 import TitleEditor from './TitleEditor';
 
-/* eslint jsx-a11y/label-has-associated-control: 0 */
-/* eslint jsx-a11y/label-has-for: 0 */
 const TodoItem = ({ todo }, ns) => {
   const { id, title, done, edited } = todo;
   return (
@@ -35,6 +33,7 @@ TodoItem.propTypes = {
   todo: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
+    edited: PropTypes.bool,
     done: PropTypes.bool.isRequired,
   }).isRequired,
 };

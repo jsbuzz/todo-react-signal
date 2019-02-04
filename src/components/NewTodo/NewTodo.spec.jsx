@@ -32,12 +32,10 @@ describe('components/NewTodo', () => {
     describe('AND there is a title set', () => {
       const todoTitle = 'Test Title';
 
-      it('should trigger AddTodo with the correct title', async () => {
+      it('should trigger AddTodo with the correct title', () => {
         const input = component.find('input');
         const currentTarget = { value: todoTitle };
         input.simulate('keyUp', { keyCode: 13, currentTarget });
-
-        await NS.lastEvent.promise;
 
         expect(NS.lastEvent).toBeInstanceOf(AddTodo);
         expect(NS.lastEvent.title).toEqual(todoTitle);
