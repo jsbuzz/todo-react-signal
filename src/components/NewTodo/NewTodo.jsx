@@ -7,8 +7,7 @@ const NewTodo = (_, namespace) => (
     autoComplete="off"
     placeholder="What needs to be done?"
     className="new-todo"
-    onKeyUp={keyup => {
-      const { currentTarget, keyCode } = keyup;
+    onKeyUp={({ currentTarget, keyCode }) => {
       if (keyCode === 13 && currentTarget.value.length) {
         namespace().trigger(AddTodo.with(currentTarget.value));
         currentTarget.value = '';
