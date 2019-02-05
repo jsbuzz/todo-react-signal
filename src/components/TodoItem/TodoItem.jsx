@@ -10,10 +10,14 @@ const TodoItem = ({ todo }, ns) => {
   return (
     <li
       className={(done ? 'todo completed' : 'todo') + (edited ? ' edited' : '')}
-      onDoubleClick={() => ns().trigger(UpdateTodo.with({ id, title, done, edited: true }))}
+      onDoubleClick={() =>
+        ns().trigger(UpdateTodo.with({ id, title, done, edited: true }))
+      }
     >
       <CheckBox
-        onChange={() => ns().trigger(UpdateTodo.with({ id, title, done: !done }))}
+        onChange={() =>
+          ns().trigger(UpdateTodo.with({ id, title, edited, done: !done }))
+        }
         done={done}
       />
       <label className="todo-title">{title}</label>
@@ -22,20 +26,18 @@ const TodoItem = ({ todo }, ns) => {
         type="button"
         className="destroy"
         onClick={() => ns().trigger(RemoveTodo.with(id))}
-      >
-      </button>
+      />
     </li>
   );
 };
-
 
 TodoItem.propTypes = {
   todo: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     edited: PropTypes.bool,
-    done: PropTypes.bool.isRequired,
-  }).isRequired,
+    done: PropTypes.bool.isRequired
+  }).isRequired
 };
 
 export default TodoItem;
