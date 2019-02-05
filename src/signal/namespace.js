@@ -22,7 +22,7 @@ const TodoSpace = NameSpace.create('Ns.Todos', {
     // restore todos from cache
     RestoreTodos, modify(todos => ({ savedTodos }) => {
       savedTodos.forEach(todo => {
-        todoId = todo.id + 1;
+        todoId = todo.id;
         todos.set(todo.id, todo);
       });
     }),

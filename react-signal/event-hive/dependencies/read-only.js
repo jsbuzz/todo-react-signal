@@ -1,16 +1,15 @@
 import clone from './clone';
-/* eslint no-use-before-define: 0 */
 
-const readOnlyIterator = (iterator) => {
+const readOnlyIterator = iterator => {
   const result = {};
   result[Symbol.iterator] = () => ({
     next: () => {
       const { value, done } = iterator.next();
       return {
         value: readOnlyProxy(value),
-        done,
+        done
       };
-    },
+    }
   });
   return result;
 };
@@ -28,8 +27,11 @@ export function readOnlyProxy(original) {
       keys: () => readOnlyIterator(original.keys()),
       values: () => readOnlyIterator(original.values()),
       entries: () => readOnlyIterator(original.entries()),
+      size: original.size
     };
-    readonlyMap[Symbol.iterator] = readOnlyIterator(original.entries())[Symbol.iterator];
+    readonlyMap[Symbol.iterator] = readOnlyIterator(original.entries())[
+      Symbol.iterator
+    ];
     return readonlyMap;
   }
 
@@ -39,17 +41,19 @@ export function readOnlyProxy(original) {
       get: name => readOnlyProxy(original.get(name)),
       add: () => {},
       values: () => readOnlyIterator(original.values()),
-      entries: () => readOnlyIterator(original.entries()),
+      entries: () => readOnlyIterator(original.entries())
     };
-    readonlySet[Symbol.iterator] = readOnlyIterator(original.entries())[Symbol.iterator];
+    readonlySet[Symbol.iterator] = readOnlyIterator(original.entries())[
+      Symbol.iterator
+    ];
     return readonlySet;
   }
 
   return original instanceof Object
     ? new Proxy(original, {
-      get: (target, property) => readOnlyProxy(target[property]),
-      set: () => true,
-    })
+        get: (target, property) => readOnlyProxy(target[property]),
+        set: () => true
+      })
     : original;
 }
 
