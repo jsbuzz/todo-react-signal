@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { UpdateTodo } from '../../../signal/events';
 
 class TitleEditor extends PureComponent {
-  inputRef = React.createRef()
+  inputRef = React.createRef();
 
   constructor(props) {
     super(props);
@@ -17,35 +17,40 @@ class TitleEditor extends PureComponent {
     this.setFocus();
   }
 
-  onChange = (event) => {
+  onChange = event => {
     this.setState({ value: event.target.value });
-  }
+  };
 
   onKeyUp = ({ keyCode }) => {
     const { todo } = this.props;
-    if (keyCode === 13) {
-      const { value } = this.state;
-      this.namespace().trigger(UpdateTodo.with({
-        ...todo,
-        edited: false,
-        title: value,
-      }));
+    const { value } = this.state;
+
+    if (keyCode === 13 && value) {
+      this.namespace().trigger(
+        UpdateTodo.with({
+          ...todo,
+          edited: false,
+          title: value
+        })
+      );
     } else if (keyCode === 27) {
       this.reset();
     }
-  }
+  };
 
   setFocus() {
-    this.inputRef.current.focus();
+    this.inputRef.current && this.inputRef.current.focus();
   }
 
   reset = () => {
     const { todo } = this.props;
-    this.namespace().trigger(UpdateTodo.with({
-      ...todo,
-      edited: false,
-    }));
-  }
+    this.namespace().trigger(
+      UpdateTodo.with({
+        ...todo,
+        edited: false
+      })
+    );
+  };
 
   render() {
     const { value } = this.state;
@@ -67,9 +72,8 @@ TitleEditor.propTypes = {
   todo: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-    done: PropTypes.bool.isRequired,
-  }).isRequired,
+    done: PropTypes.bool.isRequired
+  }).isRequired
 };
-
 
 export default TitleEditor;
