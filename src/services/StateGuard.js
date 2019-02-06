@@ -2,7 +2,7 @@ import Service from '../../react-signal/Service';
 import { StateChanged } from '../../react-signal/event-hive/namespace';
 import { RestoreTodos } from '../signal/events';
 
-export const STORE_KEY = 'state-guard:todos';
+export const STORE_KEY = id => `state-guard:todos:${id}`;
 
 class StateGuard extends Service {
   listen() {
@@ -17,11 +17,11 @@ class StateGuard extends Service {
     for (const todo of todos.values()) {
       todosToSave.push(todo);
     }
-    localStorage.setItem(STORE_KEY, JSON.stringify(todosToSave));
+    localStorage.setItem(STORE_KEY(this.namespace().id), JSON.stringify(todosToSave));
   }
 
   restoreTodos() {
-    const savedStateJSON = localStorage.getItem(STORE_KEY);
+    const savedStateJSON = localStorage.getItem(STORE_KEY(this.namespace().id));
 
     if (!savedStateJSON) return;
 

@@ -39,7 +39,7 @@ const StateConnector = (NameSpace, selector, events, WrappedComponent) => {
     checkState() {
       if (this.watchedProps) {
         for (let prop of this.watchedProps) {
-          if (this.namespace().__propsChanged[prop]) {
+          if (this.namespace()._propsChanged[prop]) {
             Control.logRerender(this, prop);
             this.forceUpdate();
             break ;

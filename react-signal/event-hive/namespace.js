@@ -11,15 +11,20 @@ export const InitState = basicEvent('NameSpace:InitState');
 export const StateChanged = basicEvent('NameSpace:StateChanged');
 // export const StateChanged = defineEvent(StateEvent, 'NameSpace:StateChanged');
 
+let __id = 0;
+window.namespaces = {};
 export class NameSpace extends EventGateway {
   constructor(name, stateDefinition) {
     super();
+    this.id = ++__id;
     this.name = name;
-    this.__sendStateUpdates = false;
+    this._sendStateUpdates = false;
 
     if (stateDefinition) {
       this.defineState(stateDefinition);
     }
+
+    window.namespaces[this.id] = this;
   }
 
   defineState(stateDefinition, readonly = true) {
@@ -27,9 +32,9 @@ export class NameSpace extends EventGateway {
     let state;
 
     if (readonly) {
-      this.__state || (this.__state = new ReadOnly());
-      this.state = this.__state.reader;
-      state = this.__state;
+      this._state || (this._state = new ReadOnly());
+      this.state = this._state.reader;
+      state = this._state;
     } else {
       this.state = {};
       state = this.state;
@@ -37,48 +42,48 @@ export class NameSpace extends EventGateway {
 
     Object.getOwnPropertyNames(stateDefinition).forEach(property => {
       if (readonly) {
-        this.__state.addProperty(property);
+        this._state.addProperty(property);
       }
       const setters = stateDefinition[property];
       for (let i = 0; i < setters.length; i += 2) {
         const callback = setters[i + 1];
         const setter = event => {
           if (readonly) {
-            this.__state.set(
+            this._state.set(
               property,
-              callback(this.__state.modifier[property])(event)
+              callback(this._state.modifier[property])(event)
             );
           } else {
             state[property] = callback(state[property])(event);
           }
 
-          if (this.__sendStateUpdates) {
+          if (this._sendStateUpdates) {
             event.promise.then(() => {
-              if (this.__sendStateUpdatesBouncer) {
-                global.clearTimeout(this.__sendStateUpdatesBouncer);
+              if (this._sendStateUpdatesBouncer) {
+                global.clearTimeout(this._sendStateUpdatesBouncer);
               }
-              this.__propsChanged[property] = true;
-              this.__sendStateUpdatesBouncer = global.setTimeout(() => {
+              this._propsChanged[property] = true;
+              this._sendStateUpdatesBouncer = global.setTimeout(() => {
                 Control.withActor(this, this).triggerSync(new StateChanged());
-                this.__sendStateUpdatesBouncer = null;
-                this.__propsChanged = {};
+                this._sendStateUpdatesBouncer = null;
+                this._propsChanged = {};
               }, 0);
             });
           }
         };
-        setter.__property = property;
+        setter._property = property;
         this.addEventListener(setters[i], setter, true);
       }
     });
 
-    this.__propsChanged = {};
-    this.triggerSync(new InitState());
+    this._propsChanged = {};
+    this.triggerSync(InitState);
   }
 
   addEventListener(fiberEvent, eventHandler, prepend = false) {
     super.addEventListener(fiberEvent, eventHandler, prepend);
     if (fiberEvent === StateChanged) {
-      this.__sendStateUpdates = true;
+      this._sendStateUpdates = true;
     }
   }
 
@@ -86,16 +91,8 @@ export class NameSpace extends EventGateway {
     return this.create(name);
   }
 
-  static create(name, stateDefinition) {
-    this.namespaces || (this.namespaces = new Map());
-
-    let namespace = this.namespaces.get(name);
-
-    if (!namespace) {
-      namespace = new NameSpace(name, stateDefinition);
-      this.namespaces.set(name, namespace);
-    }
-    return namespace;
+  static schema(name, stateDefinition) {
+    return () => new NameSpace(name, stateDefinition());
   }
 }
 

@@ -25,3 +25,7 @@ export const RestoreTodos = TodoRestoreEvent.withAlias('Todo:restore');
 export const TodoAdded = IdEvent.withAlias('Todo:added');
 
 export const TodoUpdated = id => basicEvent(`Todo:Updated#${id}`);
+
+export const UpdateActive = defineEventType({
+  active: Number
+}).withAlias('App:UpdateActive');

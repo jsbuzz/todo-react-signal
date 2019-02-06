@@ -3,15 +3,29 @@ import Control from './event-hive/control';
 
 import { NamespaceCtx } from './';
 
+const NameSpaceContextWrapper = ({ namespace, services, children }) => (
+  <NamespaceCtx.Consumer>
+    {parentNamespace => (
+      <NameSpaceContext
+        namespace={namespace()}
+        services={services}
+        parentNamespace={parentNamespace && parentNamespace.namespace}
+      >
+        {children}
+      </NameSpaceContext>
+    )}
+  </NamespaceCtx.Consumer>
+);
+
 class NameSpaceContext extends Component {
   componentDidMount() {
-    let { namespace, services } = this.props;
+    let { namespace, parentNamespace, services } = this.props;
 
     this.services = [];
     if (!services) return;
 
-    ( services.length ? services : [ services ]).forEach((Service) => {
-      const instance = new Service(namespace);
+    (services.length ? services : [services]).forEach(Service => {
+      const instance = new Service(namespace, parentNamespace);
       if (!instance.listen) return;
 
       instance.displayName = Service.name;
@@ -24,21 +38,21 @@ class NameSpaceContext extends Component {
   }
 
   componentWillUnmount() {
-    this.services.forEach((service) => {
+    this.services.forEach(service => {
       Control.cleanup(service);
       service.destructor && service.destructor();
     });
   }
 
   render() {
-    let { namespace } = this.props;
+    let { namespace, parentNamespace } = this.props;
 
     return (
-      <NamespaceCtx.Provider value={namespace}>
+      <NamespaceCtx.Provider value={{ namespace, parentNamespace }}>
         {this.props.children}
       </NamespaceCtx.Provider>
     );
   }
 }
 
-export default NameSpaceContext;
+export default NameSpaceContextWrapper;
