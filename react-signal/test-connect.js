@@ -4,8 +4,10 @@ export class TestNameSpace extends NameSpace {
   events = [];
   lastEvent = null;
 
-  namespaces = [];
-  lastNamespace = [];
+  constructor(name, schema, parent) {
+    super(name || 'TestNameSpace', schema && schema.stateDefinition(), parent);
+    this._sendStateUpdates = true;
+  }
 
   trigger(event) {
     const promise = super.trigger(event);
@@ -13,12 +15,6 @@ export class TestNameSpace extends NameSpace {
     this.lastEvent = event;
 
     return promise;
-  }
-
-  withNamespace(NS) {
-    this.namespaces.push(NS);
-    this.lastNamespace = NS;
-    return this;
   }
 
   reset() {
@@ -35,25 +31,24 @@ export class TestNameSpace extends NameSpace {
   startService(Service) {
     const service = new Service(this);
     service.listen();
-  
+
     return service;
   }
-};
+}
 
-export const connectFunction = (fn, NS = new TestNameSpace()) => (props) => fn(
-  props, (ns) => (ns || NS)
-);
+export const connectFunction = (fn, NS = new TestNameSpace()) => props =>
+  fn(props, ns => ns || NS);
 
-export const connectComponent = (ComponentClass, NS = new TestNameSpace()) => class extends ComponentClass {
-  on = (ns) => NS.withNamespace(ns);
-  namespace = () => NS.withNamespace(NS);
-};
+export const connectComponent = (ComponentClass, NS = new TestNameSpace()) =>
+  class extends ComponentClass {
+    namespace = ns => ns || NS;
+  };
 
 const Connect = (component, NS) => {
-  let ConnectedComponent = component.prototype && component.prototype.render
-    ? connectComponent(component, NS)
-    : connectFunction(component.type || component, NS)
-    ;
+  let ConnectedComponent =
+    component.prototype && component.prototype.render
+      ? connectComponent(component, NS)
+      : connectFunction(component.type || component, NS);
 
   ConnectedComponent.displayName = component.name;
 

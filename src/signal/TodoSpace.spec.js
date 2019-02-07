@@ -3,7 +3,7 @@ import { AddTodo, RemoveTodo, UpdateTodo, RestoreTodos } from './events';
 import { InitState } from '../../react-signal/event-hive/namespace';
 
 describe('signal/TodoSpace', () => {
-  const namespace = TodoSpace();
+  const namespace = TodoSpace('test');
 
   const mockTodo = id => ({
     id,

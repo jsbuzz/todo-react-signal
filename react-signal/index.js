@@ -51,10 +51,7 @@ const Connect = (
   const HiveComponent = props => (
     <NamespaceCtx.Consumer>
       {ctx => (
-        <ConnectedComponent
-          {...props}
-          namespace={(ctx && ctx.namespace) || props.namespace}
-        />
+        <ConnectedComponent {...props} namespace={ctx || props.namespace} />
       )}
     </NamespaceCtx.Consumer>
   );

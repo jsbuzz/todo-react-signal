@@ -4,6 +4,7 @@ import { UpdateActive } from '../signal/events';
 
 class AppBridge extends Service {
   listen() {
+    this.active = 0;
     this.namespace().listen(StateChanged, () => this.updateActive());
   }
 
@@ -13,7 +14,10 @@ class AppBridge extends Service {
     for (const todo of todos.values()) {
       active += todo.done ? 0 : 1;
     }
-    this.parent().trigger(UpdateActive.with(active));
+    this.namespace()
+      .parent()
+      .trigger(UpdateActive.with(active - this.active));
+    this.active = active;
   }
 
   name = 'AppBridge';

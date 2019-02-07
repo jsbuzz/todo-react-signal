@@ -12,16 +12,17 @@ export const StateChanged = basicEvent('NameSpace:StateChanged');
 // export const StateChanged = defineEvent(StateEvent, 'NameSpace:StateChanged');
 
 let __id = 0;
-window.namespaces = {};
 export class NameSpace extends EventGateway {
-  constructor(name, stateDefinition) {
+  constructor(name, stateDefinition, parent) {
     super();
     this.id = ++__id;
     this.name = name;
+    this._parent = parent;
     this._sendStateUpdates = false;
 
     if (stateDefinition) {
       this.defineState(stateDefinition);
+      this.updatingState = true;
     }
   }
 
@@ -56,6 +57,11 @@ export class NameSpace extends EventGateway {
           }
 
           if (this._sendStateUpdates) {
+            if (this.updatingState === true) {
+              this.updatingState = new Promise(resolve => {
+                this._sendStateUpdatesResolve = resolve;
+              });
+            }
             event.promise.then(() => {
               if (this._sendStateUpdatesBouncer) {
                 global.clearTimeout(this._sendStateUpdatesBouncer);
@@ -63,7 +69,11 @@ export class NameSpace extends EventGateway {
               this._propsChanged[property] = true;
               this._sendStateUpdatesBouncer = global.setTimeout(() => {
                 Control.withActor(this, this).triggerSync(StateChanged);
+                this._sendStateUpdatesResolve &&
+                  this._sendStateUpdatesResolve(this._propsChanged);
                 this._sendStateUpdatesBouncer = null;
+                this.updatingState = true;
+                this._sendStateUpdatesResolve = null;
                 this._propsChanged = {};
               }, 0);
             });
@@ -85,12 +95,20 @@ export class NameSpace extends EventGateway {
     }
   }
 
+  parent() {
+    return this._parent;
+  }
+
   static get(name) {
     return this.create(name);
   }
 
-  static schema(name, stateDefinition) {
-    return () => new NameSpace(name, stateDefinition());
+  static schema(stateDefinition) {
+    const generator = (name, parent) =>
+      new NameSpace(name, stateDefinition(), parent);
+
+    generator.stateDefinition = stateDefinition;
+    return generator;
   }
 }
 
