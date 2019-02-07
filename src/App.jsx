@@ -1,20 +1,15 @@
 import React from 'react';
 import NameSpaceContext from '../react-signal/NameSpaceContext';
 
-import TodoSpace from './signal/namespace';
+import AppSpace from './signal/AppSpace';
 
-import NewTodo from './components/NewTodo';
-import TodoList from './components/TodoList';
-
-import StateGuard from './services/StateGuard';
+import Summary from './components/Summary';
+import TodoApp from './components/TodoApp';
 
 export default () => (
-  <NameSpaceContext namespace={TodoSpace} services={[StateGuard]}>
-    <section className="todoapp">
-      <header className="header">
-        <NewTodo />
-      </header>
-      <TodoList />
-    </section>
+  <NameSpaceContext schema={AppSpace} name="AppSpace">
+    <Summary />
+    <TodoApp title="Work" />
+    <TodoApp title="Home" />
   </NameSpaceContext>
 );

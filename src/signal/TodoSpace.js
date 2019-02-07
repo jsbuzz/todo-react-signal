@@ -6,8 +6,7 @@ import {
 } from '../../react-signal/event-hive/namespace';
 import { AddTodo, RemoveTodo, UpdateTodo, RestoreTodos } from './events';
 
-let todoId = 0;
-const TodoSpace = NameSpace.create('Ns.Todos', {
+const TodoSpace = NameSpace.schema((todoId = 0) => ({
   todos: [
     InitState, set(new Map()),
     
@@ -33,7 +32,7 @@ const TodoSpace = NameSpace.create('Ns.Todos', {
     // update a todo by id
     UpdateTodo, modify(todos => ({ todo }) => todos.set(todo.id, todo))
   ]
-});
+}));
 
 window.TodoSpace = TodoSpace;
 

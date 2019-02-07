@@ -11,14 +11,18 @@ export const InitState = basicEvent('NameSpace:InitState');
 export const StateChanged = basicEvent('NameSpace:StateChanged');
 // export const StateChanged = defineEvent(StateEvent, 'NameSpace:StateChanged');
 
+let __id = 0;
 export class NameSpace extends EventGateway {
-  constructor(name, stateDefinition) {
+  constructor(name, stateDefinition, parent, readonly) {
     super();
+    this.id = ++__id;
     this.name = name;
-    this.__sendStateUpdates = false;
+    this._parent = parent;
+    this._sendStateUpdates = false;
 
     if (stateDefinition) {
-      this.defineState(stateDefinition);
+      this.defineState(stateDefinition, readonly);
+      this.updatingState = true;
     }
   }
 
@@ -27,9 +31,9 @@ export class NameSpace extends EventGateway {
     let state;
 
     if (readonly) {
-      this.__state || (this.__state = new ReadOnly());
-      this.state = this.__state.reader;
-      state = this.__state;
+      this._state || (this._state = new ReadOnly());
+      this.state = this._state.reader;
+      state = this._state;
     } else {
       this.state = {};
       state = this.state;
@@ -37,65 +41,74 @@ export class NameSpace extends EventGateway {
 
     Object.getOwnPropertyNames(stateDefinition).forEach(property => {
       if (readonly) {
-        this.__state.addProperty(property);
+        this._state.addProperty(property);
       }
       const setters = stateDefinition[property];
       for (let i = 0; i < setters.length; i += 2) {
         const callback = setters[i + 1];
         const setter = event => {
           if (readonly) {
-            this.__state.set(
+            this._state.set(
               property,
-              callback(this.__state.modifier[property])(event)
+              callback(this._state.modifier[property])(event)
             );
           } else {
             state[property] = callback(state[property])(event);
           }
 
-          if (this.__sendStateUpdates) {
+          if (this._sendStateUpdates) {
+            if (this.updatingState === true) {
+              this.updatingState = new Promise(resolve => {
+                this._sendStateUpdatesResolve = resolve;
+              });
+            }
             event.promise.then(() => {
-              if (this.__sendStateUpdatesBouncer) {
-                global.clearTimeout(this.__sendStateUpdatesBouncer);
+              if (this._sendStateUpdatesBouncer) {
+                global.clearTimeout(this._sendStateUpdatesBouncer);
               }
-              this.__propsChanged[property] = true;
-              this.__sendStateUpdatesBouncer = global.setTimeout(() => {
-                Control.withActor(this, this).triggerSync(new StateChanged());
-                this.__sendStateUpdatesBouncer = null;
-                this.__propsChanged = {};
+              this._propsChanged[property] = true;
+              this._sendStateUpdatesBouncer = global.setTimeout(() => {
+                Control.withActor(this, this).triggerSync(StateChanged);
+                this._sendStateUpdatesResolve &&
+                  this._sendStateUpdatesResolve(this._propsChanged);
+                this._sendStateUpdatesBouncer = null;
+                this.updatingState = true;
+                this._sendStateUpdatesResolve = null;
+                this._propsChanged = {};
               }, 0);
             });
           }
         };
-        setter.__property = property;
+        setter._property = property;
         this.addEventListener(setters[i], setter, true);
       }
     });
 
-    this.__propsChanged = {};
-    this.triggerSync(new InitState());
+    this._propsChanged = {};
+    this.triggerSync(InitState);
   }
 
   addEventListener(fiberEvent, eventHandler, prepend = false) {
     super.addEventListener(fiberEvent, eventHandler, prepend);
     if (fiberEvent === StateChanged) {
-      this.__sendStateUpdates = true;
+      this._sendStateUpdates = true;
     }
+  }
+
+  parent() {
+    return this._parent;
   }
 
   static get(name) {
     return this.create(name);
   }
 
-  static create(name, stateDefinition) {
-    this.namespaces || (this.namespaces = new Map());
+  static schema(stateDefinition, readonly = true) {
+    const generator = (name, parent) =>
+      new NameSpace(name, stateDefinition(), parent, readonly);
 
-    let namespace = this.namespaces.get(name);
-
-    if (!namespace) {
-      namespace = new NameSpace(name, stateDefinition);
-      this.namespaces.set(name, namespace);
-    }
-    return namespace;
+    generator.stateDefinition = stateDefinition;
+    return generator;
   }
 }
 

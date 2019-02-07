@@ -9,10 +9,6 @@ class Service {
     return Control.withActor(this, this._ns);
   }
 
-  on(ns) {
-    return Control.withActor(this, ns);
-  }
-
   name = 'Service';
 }
 
