@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Control from './event-hive/control';
 
-import { NamespaceCtx } from './';
+import { NamespaceCtx } from '.';
 
-const NameSpaceContextWrapper = ({ schema, name, services, children }) => (
+const NameSpaceWrapper = ({ schema, name, services, children }) => (
   <NamespaceCtx.Consumer>
     {parentNamespace => (
       <NameSpaceContext
@@ -54,4 +54,4 @@ class NameSpaceContext extends Component {
   }
 }
 
-export default NameSpaceContextWrapper;
+export default NameSpaceWrapper;

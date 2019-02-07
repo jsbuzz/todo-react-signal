@@ -8,8 +8,6 @@ class Service {
   namespace() {
     return Control.withActor(this, this._ns);
   }
-
-  name = 'Service';
 }
 
 export default Service;

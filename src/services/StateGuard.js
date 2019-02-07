@@ -37,8 +37,6 @@ class StateGuard extends Service {
   destructor() {
     console.log('StateGuard:destructor');
   }
-
-  name = 'StateGuard';
 }
 
 export default StateGuard;

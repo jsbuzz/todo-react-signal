@@ -19,8 +19,6 @@ class AppBridge extends Service {
       .trigger(UpdateActive.with(active - this.active));
     this.active = active;
   }
-
-  name = 'AppBridge';
 }
 
 export default AppBridge;

@@ -22,7 +22,7 @@ export class NameSpace extends EventGateway {
 
     if (stateDefinition) {
       this.defineState(stateDefinition, readonly);
-      this.updatingState = true;
+      this.updatingState = false;
     }
   }
 
@@ -57,7 +57,7 @@ export class NameSpace extends EventGateway {
           }
 
           if (this._sendStateUpdates) {
-            if (this.updatingState === true) {
+            if (this.updatingState === false) {
               this.updatingState = new Promise(resolve => {
                 this._sendStateUpdatesResolve = resolve;
               });
@@ -72,7 +72,7 @@ export class NameSpace extends EventGateway {
                 this._sendStateUpdatesResolve &&
                   this._sendStateUpdatesResolve(this._propsChanged);
                 this._sendStateUpdatesBouncer = null;
-                this.updatingState = true;
+                this.updatingState = false;
                 this._sendStateUpdatesResolve = null;
                 this._propsChanged = {};
               }, 0);

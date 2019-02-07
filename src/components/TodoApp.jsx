@@ -1,5 +1,5 @@
 import React from 'react';
-import NameSpaceContext from '../../react-signal/NameSpaceContext';
+import NameSpace from '../../react-signal/NameSpace';
 
 import TodoSpace from '../signal/TodoSpace';
 
@@ -12,7 +12,7 @@ import AppBridge from '../services/AppBridge';
 export default ({ title }) => (
   <>
     <h1>{title}</h1>
-    <NameSpaceContext
+    <NameSpace
       schema={TodoSpace}
       name={`${title}Space`}
       services={[StateGuard, AppBridge]}
@@ -23,6 +23,6 @@ export default ({ title }) => (
         </header>
         <TodoList />
       </section>
-    </NameSpaceContext>
+    </NameSpace>
   </>
 );
