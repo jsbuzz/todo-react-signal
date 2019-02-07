@@ -13,7 +13,7 @@ export const StateChanged = basicEvent('NameSpace:StateChanged');
 
 let __id = 0;
 export class NameSpace extends EventGateway {
-  constructor(name, stateDefinition, parent) {
+  constructor(name, stateDefinition, parent, readonly) {
     super();
     this.id = ++__id;
     this.name = name;
@@ -21,7 +21,7 @@ export class NameSpace extends EventGateway {
     this._sendStateUpdates = false;
 
     if (stateDefinition) {
-      this.defineState(stateDefinition);
+      this.defineState(stateDefinition, readonly);
       this.updatingState = true;
     }
   }
@@ -103,9 +103,9 @@ export class NameSpace extends EventGateway {
     return this.create(name);
   }
 
-  static schema(stateDefinition) {
+  static schema(stateDefinition, readonly = true) {
     const generator = (name, parent) =>
-      new NameSpace(name, stateDefinition(), parent);
+      new NameSpace(name, stateDefinition(), parent, readonly);
 
     generator.stateDefinition = stateDefinition;
     return generator;

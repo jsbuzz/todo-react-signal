@@ -1,6 +1,5 @@
-import AppBridge, { STORE_KEY } from './AppBridge';
+import AppBridge from './AppBridge';
 import { TestNameSpace } from '../../react-signal/test-connect';
-import { StateChanged } from '../../react-signal/event-hive/namespace';
 import TodoSpace from '../signal/TodoSpace';
 import AppSpace from '../signal/AppSpace';
 import {

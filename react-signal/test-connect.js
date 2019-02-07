@@ -5,7 +5,7 @@ export class TestNameSpace extends NameSpace {
   lastEvent = null;
 
   constructor(name, schema, parent) {
-    super(name || 'TestNameSpace', schema && schema.stateDefinition(), parent);
+    super(name || 'TestNameSpace', schema && schema.stateDefinition(), parent, false);
     this._sendStateUpdates = true;
   }
 
