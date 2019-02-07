@@ -23,8 +23,6 @@ export class NameSpace extends EventGateway {
     if (stateDefinition) {
       this.defineState(stateDefinition);
     }
-
-    window.namespaces[this.id] = this;
   }
 
   defineState(stateDefinition, readonly = true) {
@@ -64,7 +62,7 @@ export class NameSpace extends EventGateway {
               }
               this._propsChanged[property] = true;
               this._sendStateUpdatesBouncer = global.setTimeout(() => {
-                Control.withActor(this, this).triggerSync(new StateChanged());
+                Control.withActor(this, this).triggerSync(StateChanged);
                 this._sendStateUpdatesBouncer = null;
                 this._propsChanged = {};
               }, 0);

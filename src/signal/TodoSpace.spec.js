@@ -1,9 +1,9 @@
-import { InitState } from '../../react-signal/event-hive/namespace';
-import TodoSpace from './namespace';
+import TodoSpace from './TodoSpace';
 import { AddTodo, RemoveTodo, UpdateTodo, RestoreTodos } from './events';
+import { InitState } from '../../react-signal/event-hive/namespace';
 
 describe('signal/TodoSpace', () => {
-  let namespace;
+  const namespace = TodoSpace();
 
   const mockTodo = id => ({
     id,
@@ -12,8 +12,7 @@ describe('signal/TodoSpace', () => {
   });
 
   beforeEach(() => {
-    // resets the state every time
-    namespace = TodoSpace();
+    namespace.triggerSync(InitState);
   });
 
   it('starts with empty todos Map', () => {

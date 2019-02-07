@@ -15,7 +15,7 @@ describe('services/StateGuard', () => {
 
   describe('when there are items stored in localStorage', () => {
     beforeEach(() => {
-      localStorage.setItem(STORE_KEY, JSON.stringify(mockTodos));
+      localStorage.setItem(STORE_KEY(NS.id), JSON.stringify(mockTodos));
       NS.startService(StateGuard);
     });
 
@@ -57,12 +57,12 @@ describe('services/StateGuard', () => {
     });
 
     it('saves state to localStorage', async () => {
-      localStorage.removeItem(STORE_KEY);
+      localStorage.removeItem(STORE_KEY(NS.id));
 
       await NS.trigger(StateChanged);
       
       expect(
-        localStorage.getItem(STORE_KEY)
+        localStorage.getItem(STORE_KEY(NS.id))
       ).toEqual(
         JSON.stringify(mockTodos)
       );

@@ -27,7 +27,7 @@ const Control = {
 
     if (hiveEvent.name === 'NameSpace:StateChanged') {
       console.log(
-        `${Control.actor.name}:${Control.actor.id}`,
+        `${Control.actor.name}[${Control.actor.id}]`,
         'triggered',
         hiveEvent.name,
         Control.actor._propsChanged || []
@@ -38,7 +38,7 @@ const Control = {
         'triggered',
         hiveEvent.name,
         'on',
-        `${gateway.name}:${gateway.id}`
+        `${gateway.name}[${gateway.id}]`
       );
     }
   },

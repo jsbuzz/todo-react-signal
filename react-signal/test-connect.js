@@ -1,6 +1,6 @@
-import { EventGateway } from './event-hive/event-gateway';
+import { NameSpace } from './event-hive/namespace';
 
-export class TestNameSpace extends EventGateway {
+export class TestNameSpace extends NameSpace {
   events = [];
   lastEvent = null;
 
