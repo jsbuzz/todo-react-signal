@@ -1,11 +1,15 @@
 import Service from '../../react-signal/Service';
+import { AllEvents } from '../../react-signal/event-hive/event';
 import { StateChanged } from '../../react-signal/event-hive/namespace';
 import { UpdateActive } from '../signal/events';
 
 class AppBridge extends Service {
   listen() {
     this.active = 0;
-    this.namespace().listen(StateChanged, () => this.updateActive());
+    this.namespace().listen(
+      StateChanged, () => this.updateActive(),
+      // AllEvents, event => console.log('AllEvents', event)
+    );
   }
 
   updateActive() {
