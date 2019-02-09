@@ -49,12 +49,17 @@ export function readOnlyProxy(original) {
     return readonlySet;
   }
 
-  return original instanceof Object
-    ? new Proxy(original, {
-        get: (target, property) => readOnlyProxy(target[property]),
-        set: () => true
-      })
-    : original;
+  if (original && original.__isReadonlyProxy) return original;
+
+  if (original instanceof Object) {
+    return new Proxy(original, {
+      get: (target, property) =>
+        property === '__isReadonlyProxy' ? true : target[property],
+      set: () => true
+    });
+  }
+
+  return original;
 }
 
 export const READ_ONLY_PROXY = readOnlyProxy;
