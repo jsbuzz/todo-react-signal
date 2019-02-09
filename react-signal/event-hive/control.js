@@ -1,5 +1,5 @@
-const ARROW = '-->';
-const INDENT = '   ';
+const ARROW = '--> ';
+const INDENT = '    ';
 
 const Control = {
   logging: true,
@@ -27,18 +27,14 @@ const Control = {
 
     if (hiveEvent.name === 'NameSpace:StateChanged') {
       console.log(
-        Control.actor.name,
-        'triggered',
-        hiveEvent.name,
-        Control.actor._propsChanged || []
+        `${Control.actor.name} triggered ${hiveEvent.name} ${Control.actor
+          ._propsChanged || []}`
       );
     } else {
+      const componentName =
+        Control.actor.name || Control.actor.displayName || 'Component';
       console.log(
-        Control.actor.name || Control.actor.displayName || 'Component',
-        'triggered',
-        hiveEvent.name,
-        'on',
-        gateway.name
+        `${componentName} triggered ${hiveEvent.name} on ${gateway.name}`
       );
     }
   },
@@ -50,18 +46,14 @@ const Control = {
       actor.displayName.substr(0, 15) === 'StateConnector('
     ) {
       console.log(
-        ARROW,
-        actor.displayName,
-        'checking changes',
-        `<-[${event.name}]`
+        ARROW + `${actor.displayName} checking changes <-[${event.name}]`
       );
     } else {
       console.log(
-        ARROW,
-        actor.displayName || actor.name,
-        'calling',
-        fnName(fn),
-        `<-[${event.name}]`
+        ARROW +
+          `${actor.displayName || actor.name} calling ${fnName(fn)} <-[${
+            event.name
+          }]`
       );
     }
   },
@@ -69,9 +61,8 @@ const Control = {
     if (!Control.logging) return;
 
     console.log(
-      INDENT,
-      stateConnector.displayName,
-      `re-rendering because "${prop}" changed`
+      INDENT +
+        `${stateConnector.displayName} re-rendering because "${prop}" changed`
     );
   }
 };
@@ -79,7 +70,7 @@ const Control = {
 export default Control;
 
 function fnName(fn) {
-  const propName = fn.__property ? `<${fn.__property}>` : '';
+  const propName = fn._property ? `<${fn._property}>` : '';
 
   if (fn.name) return fn.name + propName;
 
