@@ -13,10 +13,11 @@ export const StateChanged = basicEvent('NameSpace:StateChanged');
 
 let __id = 0;
 export class NameSpace extends EventGateway {
-  constructor(name, stateDefinition, parent, readonly) {
+  constructor(name, stateDefinition, parent, readonly, logging) {
     super();
     this.id = ++__id;
     this.name = name;
+    this.logging = logging;
     this._parent = parent;
     this._sendStateUpdates = false;
 
@@ -62,7 +63,7 @@ export class NameSpace extends EventGateway {
                 this._sendStateUpdatesResolve = resolve;
               });
             }
-            event.promise.then(() => {
+            event._promise.then(() => {
               if (this._sendStateUpdatesBouncer) {
                 global.clearTimeout(this._sendStateUpdatesBouncer);
               }
@@ -104,8 +105,8 @@ export class NameSpace extends EventGateway {
   }
 
   static schema(stateDefinition, readonly = true) {
-    const generator = (name, parent) =>
-      new NameSpace(name, stateDefinition(), parent, readonly);
+    const generator = (name, parent, logging) =>
+      new NameSpace(name, stateDefinition(), parent, readonly, logging);
 
     generator.stateDefinition = stateDefinition;
     return generator;

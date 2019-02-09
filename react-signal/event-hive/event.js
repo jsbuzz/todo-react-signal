@@ -1,5 +1,7 @@
 let eventId = 0;
 
+export const AllEvents = {};
+
 export class Event {
   constructor() {
     this.name = this.constructor.EventName;

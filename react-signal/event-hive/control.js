@@ -2,7 +2,7 @@ const ARROW = '--> ';
 const INDENT = '    ';
 
 const Control = {
-  logging: true,
+  logging: false,
   actor: null,
   withActor: (actor, ns) => {
     Control.actor = actor;
@@ -23,7 +23,7 @@ const Control = {
     });
   },
   logTriggerSync: (hiveEvent, gateway) => {
-    if (!Control.logging) return;
+    if (!Control.logging && !gateway.logging) return;
 
     if (hiveEvent.name === 'NameSpace:StateChanged') {
       console.log(
@@ -39,7 +39,7 @@ const Control = {
     }
   },
   logCallback: (actor, fn, event) => {
-    if (!Control.logging) return;
+    if (!Control.logging && !event._origin.logging) return;
 
     if (
       actor.displayName &&
@@ -58,7 +58,7 @@ const Control = {
     }
   },
   logRerender: (stateConnector, prop) => {
-    if (!Control.logging) return;
+    if (!Control.logging && (!stateConnector._namespace || !stateConnector._namespace.logging)) return;
 
     console.log(
       INDENT +

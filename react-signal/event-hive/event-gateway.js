@@ -15,7 +15,7 @@ export class EventGateway {
     const promise = new Promise(resolve =>
       global.setTimeout(() => resolve(this.triggerSync(hiveEvent, actor)), 0)
     );
-    hiveEvent.promise = promise;
+    hiveEvent._promise = promise;
 
     return promise;
   }
@@ -26,6 +26,8 @@ export class EventGateway {
       hiveEvent = new hiveEvent();
     }
     actor && (Control.actor = actor);
+    hiveEvent._origin = this;
+
     Control.logTriggerSync(hiveEvent, this);
     return this.eventPool.dispatchEvent(hiveEvent);
   }

@@ -3,11 +3,11 @@ import Control from './event-hive/control';
 
 import { NamespaceCtx } from '.';
 
-const NameSpaceWrapper = ({ schema, name, services, children }) => (
+const NameSpaceWrapper = ({ schema, name, services, debug, children }) => (
   <NamespaceCtx.Consumer>
     {parentNamespace => (
       <NameSpaceContext
-        namespace={schema(name, parentNamespace)}
+        namespace={schema(name, parentNamespace, debug)}
         services={services}
       >
         {children}

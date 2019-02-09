@@ -5,10 +5,13 @@ import ListenerChain from './listener-chain';
 export class EventPool {
   constructor() {
     this.events = new Map();
+    this.allEvents = null;
   }
 
   addEventListener(eventName, listener, prepend = false) {
-    // console.log('addEventListener', eventName, listener);
+    if (!eventName) {
+      this.addGlobalListener(listener, prepend = false);
+    }
     if (prepend) {
       this.events.set(
         eventName,
@@ -16,16 +19,31 @@ export class EventPool {
           listener, this.events.get(eventName),
         ),
       );
-      return;
-    }
-    if (this.events.has(eventName)) {
+    } else if (this.events.has(eventName)) {
       this.events.get(eventName).add(listener);
     } else {
       this.events.set(eventName, ListenerChain.with(listener));
     }
   }
 
+  addGlobalListener(listener, prepend) {
+    if (prepend) {
+      this.allEvents = ListenerChain.with(
+          listener, this.allEvents,
+        );
+    } else if (this.allEvents) {
+      this.allEvents.add(listener);
+    } else {
+      this.allEvents = ListenerChain.with(listener);
+    }
+  }
+
   removeEventListener(eventName, listener) {
+    if (!eventName) {
+      this.allEvents = this.allEvents.without(listener);
+      
+      return ;
+    }
     // console.log('removeEventListener', eventName, listener);
     const chain = this.events.get(eventName);
 
@@ -43,5 +61,6 @@ export class EventPool {
   dispatchEvent(fiberEvent) {
     const chain = this.events.get(fiberEvent.name);
     chain && chain.execute(fiberEvent);
+    this.allEvents && this.allEvents.execute(fiberEvent);
   }
 }

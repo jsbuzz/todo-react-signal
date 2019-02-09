@@ -12,6 +12,7 @@ const StateConnector = (NameSpace, selector, events, WrappedComponent) => {
     );
     propSelector = typeof selector === 'function' ? selector : props => props
     watchedProps = null
+    _namespace = NameSpace;
 
     componentDidMount() {
       this.displayName = `StateConnector(${WrappedComponent.displayName || WrappedComponent.name})`;
