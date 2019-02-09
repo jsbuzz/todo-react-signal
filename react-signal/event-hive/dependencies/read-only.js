@@ -1,5 +1,7 @@
 import clone from './clone';
 
+const isReadonlyProxy = Symbol('isReadonlyProxy');
+
 const readOnlyIterator = iterator => {
   const result = {};
   result[Symbol.iterator] = () => ({
@@ -49,12 +51,12 @@ export function readOnlyProxy(original) {
     return readonlySet;
   }
 
-  if (original && original.__isReadonlyProxy) return original;
+  if (original && original[isReadonlyProxy]) return original;
 
   if (original instanceof Object) {
     return new Proxy(original, {
       get: (target, property) =>
-        property === '__isReadonlyProxy' ? true : target[property],
+        property === isReadonlyProxy ? true : target[property],
       set: () => true
     });
   }
