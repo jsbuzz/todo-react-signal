@@ -5,13 +5,14 @@ import AppSpace from './signal/AppSpace';
 
 import Summary from './components/Summary';
 import TodoApp from './components/TodoApp';
-import LastTodoEvent, { LastTodoEventSignal } from './components/LastTodoEvent';
+import LastTodoEvent from './components/LastTodoEvent';
+import LastOperation from './components/LastOperation';
 
 export default () => (
   <NameSpace schema={AppSpace} name="AppSpace" debug={true}>
     <Summary />
     <LastTodoEvent />
-    <LastTodoEventSignal />
+    <LastOperation />
     <TodoApp title="Work" />
     <TodoApp title="Home" />
   </NameSpace>

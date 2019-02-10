@@ -87,9 +87,10 @@ export const Signal = connectorFn => {
       }
       
       render() {
-        return this.state && renderFn(this.state);
+        return renderFn(this.state);
       }
 
+      state = {}
       displayName = `~${renderFn.name}`
     };
     SignalComponent.displayName = `~$${renderFn.name}`;
