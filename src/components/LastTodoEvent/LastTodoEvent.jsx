@@ -20,3 +20,5 @@ class LastTodoEvent extends PureComponent {
 }
 
 export default LastTodoEvent;
+
+export const LastTodoEventFn = ({ lastEvent }) => (<div>Last event triggered: {lastEvent}</div>);

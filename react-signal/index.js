@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 
 import Control from './event-hive/control';
 import StateConnector from './connect/StateConnector';
@@ -75,3 +75,33 @@ export const Enable = component => {
 };
 
 export default Connect;
+
+export const Signal = connectorFn => {
+  return renderFn => {
+    const SignalComponent = class extends PureComponent {
+      componentDidMount() {
+        const { namespace } = this.props;
+
+        const listeners = connectorFn(state => this.setState(state));
+        Control.withActor(this, namespace).listen(...listeners);
+      }
+      
+      render() {
+        return this.state && renderFn(this.state);
+      }
+
+      displayName = `~${renderFn.name}`
+    };
+    SignalComponent.displayName = `~$${renderFn.name}`;
+    
+    const componentFn = () => (
+      <NamespaceCtx.Consumer>
+        {ctx => (
+          <SignalComponent namespace={ctx || props.namespace} />
+        )}
+      </NamespaceCtx.Consumer>
+    );
+    componentFn.displayName = `~${renderFn.name}`;
+    return componentFn;
+  }
+};
