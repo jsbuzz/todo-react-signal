@@ -12,7 +12,8 @@ export default () => (
   <NameSpace schema={AppSpace} name="AppSpace" debug={true}>
     <Summary />
     <LastTodoEvent />
-    <LastOperation />
+    <LastOperation target="Work" />
+    <LastOperation target="Home" />
     <TodoApp title="Work" />
     <TodoApp title="Home" />
   </NameSpace>

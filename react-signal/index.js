@@ -8,6 +8,8 @@ export { AllEvents };
 
 export const NamespaceCtx = React.createContext();
 
+export const getOrigin = event => event._origin;
+
 // what's better for this usecase, composition or inheritence?
 const connectComponent = ComponentClass =>
   class extends ComponentClass {
@@ -82,12 +84,15 @@ export const Signal = connectorFn => {
       componentDidMount() {
         const { namespace } = this.props;
 
-        const listeners = connectorFn(state => this.setState(state));
+        const listeners = connectorFn(state => this.setState(state), this.props);
         Control.withActor(this, namespace).listen(...listeners);
       }
       
       render() {
-        return renderFn(this.state);
+        return renderFn({
+          ...this.state,
+          ...this.props
+        });
       }
 
       state = {}
@@ -95,10 +100,10 @@ export const Signal = connectorFn => {
     };
     SignalComponent.displayName = `~$${renderFn.name}`;
     
-    const componentFn = () => (
+    const componentFn = (props) => (
       <NamespaceCtx.Consumer>
         {ctx => (
-          <SignalComponent namespace={ctx || props.namespace} />
+          <SignalComponent {...props} namespace={ctx || props.namespace} />
         )}
       </NamespaceCtx.Consumer>
     );

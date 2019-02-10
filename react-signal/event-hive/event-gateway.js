@@ -27,7 +27,7 @@ export class EventGateway {
       hiveEvent = new hiveEvent();
     }
     actor && (Control.actor = actor);
-    hiveEvent._origin = this;
+    hiveEvent._origin || (hiveEvent._origin = this);
 
     Control.logTriggerSync(hiveEvent, this);
     return this.eventPool.dispatchEvent(hiveEvent);
