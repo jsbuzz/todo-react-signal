@@ -1,4 +1,5 @@
 import Control from './control';
+import { AllEvents } from './event';
 import { EventPool } from './event-pool';
 
 export class EventGateway {
@@ -39,11 +40,18 @@ export class EventGateway {
   }
 
   addEventListener(fiberEvent, eventHandler, prepend = false) {
-    this.eventPool.addEventListener(
-      fiberEvent.EventName,
-      eventHandler,
-      prepend
-    );
+    if (fiberEvent === AllEvents) {
+      this.eventPool.addGlobalListener(
+        eventHandler,
+        prepend
+      );  
+    } else {
+      this.eventPool.addEventListener(
+        fiberEvent.EventName,
+        eventHandler,
+        prepend
+      );  
+    }
 
     Control.registerListener(
       this.eventPool,

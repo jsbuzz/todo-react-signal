@@ -8,7 +8,7 @@ class AppBridge extends Service {
     this.active = 0;
     this.namespace().listen(
       StateChanged, () => this.updateActive(),
-      // AllEvents, event => console.log('AllEvents', event)
+      AllEvents, event => this.bounce(event)
     );
   }
 
@@ -22,6 +22,12 @@ class AppBridge extends Service {
       .parent()
       .trigger(UpdateActive.with(active - this.active));
     this.active = active;
+  }
+
+  bounce(event) {
+    if (event.name.toLowerCase().includes('todo')) {
+      this.namespace().parent().trigger(event);
+    }
   }
 }
 

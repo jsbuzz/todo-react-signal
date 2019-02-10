@@ -8,6 +8,8 @@ const NameSpaceWrapper = ({ schema, name, services, debug, children }) => (
     {parentNamespace => (
       <NameSpaceContext
         namespace={schema(name, parentNamespace, debug)}
+        // should debug be inherited from parent namespace?
+        // namespace={schema(name, parentNamespace, debug || parentNamespace && parentNamespace.logging)}
         services={services}
       >
         {children}

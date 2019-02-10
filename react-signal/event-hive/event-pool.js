@@ -9,9 +9,6 @@ export class EventPool {
   }
 
   addEventListener(eventName, listener, prepend = false) {
-    if (!eventName) {
-      this.addGlobalListener(listener, prepend = false);
-    }
     if (prepend) {
       this.events.set(
         eventName,

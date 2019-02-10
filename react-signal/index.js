@@ -2,6 +2,9 @@ import React from 'react';
 
 import Control from './event-hive/control';
 import StateConnector from './connect/StateConnector';
+import { AllEvents } from './event-hive/event';
+
+export { AllEvents };
 
 export const NamespaceCtx = React.createContext();
 
