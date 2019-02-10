@@ -75,6 +75,13 @@ function fnName(fn) {
   if (fn.name) return fn.name + propName;
 
   const def = fn.toString().match(/_this[0-9]?\.([a-zA-Z_$]+)\(/i);
+  if (!def) {
+    const functionNames = fn.toString().match(/[a-zA-Z_]+\([^)]*\)/g);
+    
+    if (functionNames && functionNames.length) {
+      return "'" + functionNames.map(n => n.split('(')[0]).join('|') + "'";
+    }
+  }
 
   return def && def.length > 1 ? `'${def[1]}${propName}'` : 'inline callback';
 }
