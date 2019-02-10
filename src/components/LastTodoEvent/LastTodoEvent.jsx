@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { AllEvents } from '../../../react-signal';
 
-class LastTodoEvent extends Component {
+class LastTodoEvent extends PureComponent {
   componentDidMount() {
     const isTodoEvent = event => event.name.toLowerCase().includes('todo');
 
