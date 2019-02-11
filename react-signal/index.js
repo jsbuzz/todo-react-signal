@@ -84,10 +84,17 @@ export const Signal = connectorFn => {
       componentDidMount() {
         const { namespace } = this.props;
 
-        const listeners = connectorFn(state => this.setState(state), this.props);
+        const listeners = connectorFn(
+          state => this.setState(state),
+          this.props
+        );
         Control.withActor(this, namespace).listen(...listeners);
       }
-      
+
+      componentWillUnmount() {
+        Control.cleanup(this);
+      }
+
       render() {
         return renderFn({
           ...this.state,
@@ -95,12 +102,12 @@ export const Signal = connectorFn => {
         });
       }
 
-      state = {}
-      displayName = `~${renderFn.name}`
+      state = {};
+      displayName = `~${renderFn.name}`;
     };
     SignalComponent.displayName = `~$${renderFn.name}`;
-    
-    const componentFn = (props) => (
+
+    const componentFn = props => (
       <NamespaceCtx.Consumer>
         {ctx => (
           <SignalComponent {...props} namespace={ctx || props.namespace} />
@@ -109,5 +116,5 @@ export const Signal = connectorFn => {
     );
     componentFn.displayName = `~${renderFn.name}`;
     return componentFn;
-  }
+  };
 };
