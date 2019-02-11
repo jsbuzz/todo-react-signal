@@ -6,7 +6,7 @@ import {
   RestoreTodos
 } from '../../signal/events';
 
-export const LastOperationRenderer = ({ operation, target }) => (
+export const LastOperation = ({ operation, target }) => (
   <div>
     Last operation on {target}: <strong>{operation}</strong>
   </div>
@@ -17,13 +17,11 @@ export const LastOperationListeners = (setProps, { target }) => {
   return [
     AddTodo,
     ({ title, _origin }) =>
-      isTarget(_origin) &&
-      setProps({ operation: `Added: "${title}"` }),
+      isTarget(_origin) && setProps({ operation: `Added: "${title}"` }),
 
     RemoveTodo,
     ({ id, _origin }) =>
-      isTarget(_origin) &&
-      setProps({ operation: `Removed: #${id}` }),
+      isTarget(_origin) && setProps({ operation: `Removed: #${id}` }),
 
     UpdateTodo,
     ({ todo: { id, done }, _origin }) =>

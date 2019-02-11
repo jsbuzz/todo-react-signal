@@ -39,7 +39,7 @@ const Control = {
     }
   },
   logCallback: (actor, fn, event) => {
-    if (!Control.logging && !event._origin.logging) return;
+    if (!Control.logging && !event._gateway.logging) return;
 
     if (
       actor.displayName &&
@@ -58,7 +58,11 @@ const Control = {
     }
   },
   logRerender: (stateConnector, prop) => {
-    if (!Control.logging && (!stateConnector._namespace || !stateConnector._namespace.logging)) return;
+    if (
+      !Control.logging &&
+      (!stateConnector._namespace || !stateConnector._namespace.logging)
+    )
+      return;
 
     console.log(
       INDENT +
@@ -77,7 +81,7 @@ function fnName(fn) {
   const def = fn.toString().match(/_this[0-9]?\.([a-zA-Z_$]+)\(/i);
   if (!def) {
     const functionNames = fn.toString().match(/[a-zA-Z_]+\([^)]*\)/g);
-    
+
     if (functionNames && functionNames.length) {
       return "'" + functionNames.map(n => n.split('(')[0]).join('|') + "'";
     }

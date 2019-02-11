@@ -1,7 +1,5 @@
 import ListenerChain from './listener-chain';
 
-/* eslint import/prefer-default-export: 0 */
-/* eslint no-unused-expressions: 0 */
 export class EventPool {
   constructor() {
     this.events = new Map();
@@ -12,9 +10,7 @@ export class EventPool {
     if (prepend) {
       this.events.set(
         eventName,
-        ListenerChain.with(
-          listener, this.events.get(eventName),
-        ),
+        ListenerChain.with(listener, this.events.get(eventName))
       );
     } else if (this.events.has(eventName)) {
       this.events.get(eventName).add(listener);
@@ -25,9 +21,7 @@ export class EventPool {
 
   addGlobalListener(listener, prepend) {
     if (prepend) {
-      this.allEvents = ListenerChain.with(
-          listener, this.allEvents,
-        );
+      this.allEvents = ListenerChain.with(listener, this.allEvents);
     } else if (this.allEvents) {
       this.allEvents.add(listener);
     } else {
@@ -38,8 +32,8 @@ export class EventPool {
   removeEventListener(eventName, listener) {
     if (!eventName) {
       this.allEvents = this.allEvents.without(listener);
-      
-      return ;
+
+      return;
     }
     // console.log('removeEventListener', eventName, listener);
     const chain = this.events.get(eventName);

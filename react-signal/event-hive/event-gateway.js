@@ -28,6 +28,7 @@ export class EventGateway {
     }
     actor && (Control.actor = actor);
     hiveEvent._origin || (hiveEvent._origin = this);
+    hiveEvent._gateway = this;
 
     Control.logTriggerSync(hiveEvent, this);
     return this.eventPool.dispatchEvent(hiveEvent);
@@ -41,16 +42,13 @@ export class EventGateway {
 
   addEventListener(fiberEvent, eventHandler, prepend = false) {
     if (fiberEvent === AllEvents) {
-      this.eventPool.addGlobalListener(
-        eventHandler,
-        prepend
-      );  
+      this.eventPool.addGlobalListener(eventHandler, prepend);
     } else {
       this.eventPool.addEventListener(
         fiberEvent.EventName,
         eventHandler,
         prepend
-      );  
+      );
     }
 
     Control.registerListener(

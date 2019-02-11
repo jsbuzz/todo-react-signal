@@ -1,4 +1,4 @@
 import { Signal } from '../../../react-signal';
-import { LastOperationRenderer, LastOperationListeners } from './LastOperation';
+import { LastOperation, LastOperationListeners } from './LastOperation';
 
-export default Signal(LastOperationListeners)(LastOperationRenderer);
+export default Signal(LastOperationListeners)(LastOperation);
