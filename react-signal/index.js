@@ -86,10 +86,14 @@ export const Signal = connectorFn => {
 
         const listeners = connectorFn(
           state => this.setState(state),
-          () => ({
-            ...this.props,
-            ...this.state
-          })
+          key => {
+            const values = {
+              ...this.props,
+              ...this.state
+            };
+
+            return key !== undefined ? values[key] : values;
+          }
         );
         Control.withActor(this, namespace).listen(...listeners);
       }
