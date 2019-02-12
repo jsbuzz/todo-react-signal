@@ -86,7 +86,10 @@ export const Signal = connectorFn => {
 
         const listeners = connectorFn(
           state => this.setState(state),
-          this.props
+          () => ({
+            ...this.props,
+            ...this.state
+          })
         );
         Control.withActor(this, namespace).listen(...listeners);
       }
@@ -96,10 +99,13 @@ export const Signal = connectorFn => {
       }
 
       render() {
-        return renderFn({
-          ...this.state,
-          ...this.props
-        });
+        return renderFn(
+          {
+            ...this.props,
+            ...this.state
+          },
+          () => Control.withActor(this, this.props.namespace)
+        );
       }
 
       state = {};

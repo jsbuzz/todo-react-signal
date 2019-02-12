@@ -7,13 +7,13 @@ import {
 } from '../../signal/events';
 
 export const LastOperation = ({ operation, target }) => (
-  <div>
+  <span>
     Last operation on {target}: <strong>{operation}</strong>
-  </div>
+  </span>
 );
 
-export const LastOperationListeners = (setProps, { target }) => {
-  const isTarget = ns => ns.name.includes(target);
+export const LastOperationListeners = (setProps, get) => {
+  const isTarget = ns => ns.name.includes(get().target);
   return [
     AddTodo,
     ({ title, _origin }) =>
