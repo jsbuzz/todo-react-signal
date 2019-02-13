@@ -34,6 +34,55 @@ export class TestNameSpace extends NameSpace {
 
     return service;
   }
+
+  // Signal(LastOperationListeners)(LastOperation);
+  addSignal(connectorFn) {
+    const NS = this;
+    return renderFn => {
+      const SignalComponent = class extends PureComponent {
+        componentDidMount() {
+          const { namespace } = this.props;
+  
+          const listeners = connectorFn(
+            state => this.setState(state),
+            key => {
+              const values = {
+                ...this.props,
+                ...this.state
+              };
+  
+              return key !== undefined ? values[key] : values;
+            }
+          );
+          Control.withActor(this, namespace).listen(...listeners);
+        }
+  
+        componentWillUnmount() {
+          Control.cleanup(this);
+        }
+  
+        render() {
+          return renderFn(
+            {
+              ...this.props,
+              ...this.state
+            },
+            () => Control.withActor(this, this.props.namespace)
+          );
+        }
+  
+        state = {};
+        displayName = `~${renderFn.name}`;
+      };
+      SignalComponent.displayName = `~$${renderFn.name}`;
+  
+      const componentFn = props => (
+        <SignalComponent {...props} namespace={NS} />
+      );
+      componentFn.displayName = `~${renderFn.name}`;
+      return componentFn;
+    };  
+  }
 }
 
 export const connectFunction = (fn, NS = new TestNameSpace()) => props =>
@@ -56,3 +105,54 @@ const Connect = (component, NS) => {
 };
 
 export default Connect;
+
+export const Signal = connectorFn => {
+  return renderFn => {
+    const SignalComponent = class extends PureComponent {
+      componentDidMount() {
+        const { namespace } = this.props;
+
+        const listeners = connectorFn(
+          state => this.setState(state),
+          key => {
+            const values = {
+              ...this.props,
+              ...this.state
+            };
+
+            return key !== undefined ? values[key] : values;
+          }
+        );
+        Control.withActor(this, namespace).listen(...listeners);
+      }
+
+      componentWillUnmount() {
+        Control.cleanup(this);
+      }
+
+      render() {
+        return renderFn(
+          {
+            ...this.props,
+            ...this.state
+          },
+          () => Control.withActor(this, this.props.namespace)
+        );
+      }
+
+      state = {};
+      displayName = `~${renderFn.name}`;
+    };
+    SignalComponent.displayName = `~$${renderFn.name}`;
+
+    const componentFn = props => (
+      <NamespaceCtx.Consumer>
+        {ctx => (
+          <SignalComponent {...props} namespace={ctx || props.namespace} />
+        )}
+      </NamespaceCtx.Consumer>
+    );
+    componentFn.displayName = `~${renderFn.name}`;
+    return componentFn;
+  };
+};

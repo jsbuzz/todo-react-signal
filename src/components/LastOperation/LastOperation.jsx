@@ -12,28 +12,28 @@ export const LastOperation = ({ operation, target }) => (
   </span>
 );
 
-export const LastOperationListeners = (setProps, get) => {
-  const isTarget = ns => ns.name.includes(get().target);
+export const LastOperationListeners = (set, get) => {
+  const isTarget = ns => ns.name.includes(get('target'));
   return [
     AddTodo,
     ({ title, _origin }) =>
-      isTarget(_origin) && setProps({ operation: `Added: "${title}"` }),
+      isTarget(_origin) && set({ operation: `Added: "${title}"` }),
 
     RemoveTodo,
     ({ id, _origin }) =>
-      isTarget(_origin) && setProps({ operation: `Removed: #${id}` }),
+      isTarget(_origin) && set({ operation: `Removed: #${id}` }),
 
     UpdateTodo,
     ({ todo: { id, done }, _origin }) =>
       isTarget(_origin) &&
-      setProps({
+      set({
         operation: `Updated: #${id}: ${done ? 'done' : 'active'}`
       }),
 
     RestoreTodos,
     ({ savedTodos, _origin }) =>
       isTarget(_origin) &&
-      setProps({
+      set({
         operation: `Restored ${savedTodos.length} items from cache`
       })
   ];

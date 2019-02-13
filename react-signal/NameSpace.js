@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import Control from './event-hive/control';
 
 import { NamespaceCtx } from '.';
+import { RootNameSpace } from './event-hive/namespace';
 
-const NameSpaceWrapper = ({ schema, name, services, debug, children }) => (
+const NameSpaceWrapper = ({ namespace, schema, name, services, debug, children }) => (
   <NamespaceCtx.Consumer>
     {parentNamespace => (
       <NameSpaceContext
-        namespace={schema(name, parentNamespace, debug)}
+        namespace={namespace || schema(name, parentNamespace || RootNameSpace, debug)}
         // should debug be inherited from parent namespace?
         // namespace={schema(name, parentNamespace, debug || parentNamespace && parentNamespace.logging)}
         services={services}
