@@ -12,8 +12,8 @@ export const LastOperation = ({ operation, target }) => (
   </span>
 );
 
-export const LastOperationListeners = (get, set) => {
-  const isTarget = ns => ns.name.includes(get().target);
+export const LastOperationListeners = (set, get) => {
+  const isTarget = ns => ns.name.includes(get('target'));
   return [
     AddTodo,
     ({ title, _origin }) =>

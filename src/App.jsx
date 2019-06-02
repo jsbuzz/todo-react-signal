@@ -1,5 +1,4 @@
 import React from 'react';
-import { Signal } from '../react-signal';
 import NameSpace from '../react-signal/NameSpace';
 
 import AppSpace from './signal/AppSpace';

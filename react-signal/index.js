@@ -56,7 +56,7 @@ const Connect = (
   const HiveComponent = props => (
     <NamespaceCtx.Consumer>
       {ctx => (
-        <ConnectedComponent {...props} namespace={ctx || props.namespace} />
+        <ConnectedComponent {...props} namespace={ctx || props.namespace || RootNameSpace} />
       )}
     </NamespaceCtx.Consumer>
   );
@@ -123,7 +123,7 @@ export const Signal = connectorFn => {
     const componentFn = props => (
       <NamespaceCtx.Consumer>
         {ctx => (
-          <SignalComponent {...props} namespace={ctx || props.namespace} />
+          <SignalComponent {...props} namespace={ctx || props.namespace || RootNameSpace} />
         )}
       </NamespaceCtx.Consumer>
     );

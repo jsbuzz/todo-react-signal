@@ -118,3 +118,5 @@ export const modify = fn => value => payload => {
   fn(value)(payload);
   return value;
 };
+
+export const RootNameSpace = new NameSpace('NameSpace:Root');
