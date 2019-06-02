@@ -85,7 +85,7 @@ export const Signal = connectorFn => {
         const { namespace } = this.props;
 
         const listeners = connectorFn(
-          state => this.setState(state),
+          // get:
           key => {
             const values = {
               ...this.props,
@@ -93,7 +93,10 @@ export const Signal = connectorFn => {
             };
 
             return key !== undefined ? values[key] : values;
-          }
+          },
+
+          // set:
+          state => this.setState(state)
         );
         Control.withActor(this, namespace).listen(...listeners);
       }
