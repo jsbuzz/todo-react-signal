@@ -2,6 +2,16 @@
 
 Example application to develop the prototype of the React-Signal library.
 
+Created with `create-react-app` so for running locally all you need is:
+1) yarn
+2) yarn start
+
+or
+
+1) npm install
+2) npm start
+
+
 # React ~ Signal
 
 Signal is an event based state management and component communication library. Its aim is to implement an event based state management system and to trial some ideas around asynchronous component communication.
