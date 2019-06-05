@@ -14,7 +14,28 @@ Namespaces facilitate event triggering and listening. When an event is triggered
 
 Namespaces can run services that are similar to data components - they have no UI but can interact with the UI components through events. Typically services will fetch or post data to APIs or act as bridges to parent Namespaces. 
 
-It is currently worked out if events should bounce up in the Namespace tree. It is possible to catch events and trigger them to the parent namespace by services in the meantime.
+```
+export default ({ title }) => (
+  <>
+    <h1>{title}</h1>
+    <NameSpace
+      schema={TodoSpace}
+      name={`${title}Space`}
+      services={[StateGuard, AppBridge]}
+    >
+      <section className="todoapp">
+        <header className="header">
+          <NewTodo />
+        </header>
+        <TodoList />
+      </section>
+    </NameSpace>
+  </>
+);
+```
+
+It is currently being worked out if events should bounce up in the Namespace tree. It is possible to catch events and trigger them to the parent namespace by services in the meantime.
+
 
 ## Events
 
@@ -79,3 +100,7 @@ Good examples can be found for
 - [TodoSpace](https://github.com/jsbuzz/todo-react-signal/blob/master/src/signal/TodoSpace.spec.js)
 - [TodoItem](https://github.com/jsbuzz/todo-react-signal/blob/master/src/components/TodoItem/TodoItem.spec.jsx)
 - [NewTodo](https://github.com/jsbuzz/todo-react-signal/blob/master/src/components/NewTodo/NewTodo.spec.jsx)
+
+## Debugging
+
+React Signal is also built to be easily debuggable. Debug can be switched on for development and it will log every event trigger and what listeners were called from which component.
