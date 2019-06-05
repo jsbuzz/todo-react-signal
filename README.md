@@ -2,15 +2,17 @@
 
 Example application to develop the prototype of the React-Signal library.
 
-# React Signal ~
+# React ~ Signal
 
 Signal is an event based state management and component communication library. Its aim is to implement an event based state management system and to trial some ideas around asynchronous component communication.
 
-The idea itself is a marriage between redux and FlightJs. It is meant to be a learning process - a sandbox for new ideas and implementations.
+The idea itself is a marriage between redux and FlightJs. It is meant to be a learning process - a sandbox for new ideas.
 
 ## Namespaces
 
 Namespaces facilitate event triggering and listening. When an event is triggered inside a Namespace, every child component that is listening for that particular event will receive it.
+
+Namespaces can run services that are similar to data components - they have no UI but can interact with the UI components through events. Typically services will fetch or post data to APIs or act as bridges to parent Namespaces. 
 
 It is currently worked out if events should bounce up in the Namespace tree. It is possible to catch events and trigger them to the parent namespace by services in the meantime.
 
@@ -19,6 +21,14 @@ It is currently worked out if events should bounce up in the Namespace tree. It 
 Events are strongly typed and much more defined than redux actions or FlightJS events. Event data is also immutable by default to avoid problems when some listeners would cause errors by updating the event data for all the others.
 
 Events are identified by a name, which will be used by the namespaces to set listeners for. When an event is triggered a new instance is made that will be sent to all the listener functions inside the Namespace.
+
+```
+export const AddTodoEvent = defineEventType({
+  title: String
+});
+```
+
+Similarly to propTypes for React Components events will have typed properties but they will throw runtime exceptions if initiated with the wrong payload.
 
 ## State
 
