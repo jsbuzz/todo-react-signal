@@ -8,9 +8,13 @@ Signal is an event based state management and component communication library. I
 
 The idea itself is a marriage between redux and FlightJs. It is meant to be a learning process - a sandbox for new ideas.
 
+Also React ~ Signal can handle async state changes out of the box as all events are async by nature. It offers less boilerplate and more flexibility than Redux, but of course it is easy in the prototype stage.
+
 ## Namespaces
 
-Namespaces facilitate event triggering and listening. When an event is triggered inside a Namespace, every child component that is listening for that particular event will receive it.
+Namespaces facilitate event triggering and listening. When an event is triggered inside a Namespace, every connected child component that is listening for that particular event will receive it.
+
+Components need to be connected through a `Connect` function very similarly to Redux, although there is no `mapDispatchToProps`.
 
 Namespaces can run services that are similar to data components - they have no UI but can interact with the UI components through events. Typically services will fetch or post data to APIs or act as bridges to parent Namespaces. 
 
