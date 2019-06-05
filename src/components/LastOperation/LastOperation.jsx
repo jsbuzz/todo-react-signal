@@ -12,7 +12,7 @@ export const LastOperation = ({ operation, target }) => (
   </span>
 );
 
-export const LastOperationListeners = (set, get) => {
+export const LastOperationListeners = (get, set) => {
   const isTarget = ns => ns.name.includes(get('target'));
   return [
     AddTodo,

@@ -1,3 +1,85 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/LastOperation should match snapshot 1`] = `undefined`;
+exports[`components/LastOperation should match snapshot 1`] = `
+ShallowWrapper {
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <~LastOperation
+    target="Target"
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateError": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "namespace": TestNameSpace {
+        "_parent": undefined,
+        "_sendStateUpdates": true,
+        "eventPool": EventPool {
+          "allEvents": null,
+          "events": Map {},
+        },
+        "events": Array [],
+        "id": 2,
+        "lastEvent": null,
+        "logging": undefined,
+        "name": "TargetSpace",
+      },
+      "target": "Target",
+    },
+    "ref": null,
+    "rendered": null,
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "namespace": TestNameSpace {
+          "_parent": undefined,
+          "_sendStateUpdates": true,
+          "eventPool": EventPool {
+            "allEvents": null,
+            "events": Map {},
+          },
+          "events": Array [],
+          "id": 2,
+          "lastEvent": null,
+          "logging": undefined,
+          "name": "TargetSpace",
+        },
+        "target": "Target",
+      },
+      "ref": null,
+      "rendered": null,
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+        "lifecycles": Object {
+          "componentDidUpdate": Object {
+            "onSetState": true,
+          },
+          "getDerivedStateFromProps": true,
+          "getSnapshotBeforeUpdate": true,
+          "setState": Object {
+            "skipsComponentDidUpdateOnNullish": true,
+          },
+        },
+      },
+    },
+  },
+}
+`;

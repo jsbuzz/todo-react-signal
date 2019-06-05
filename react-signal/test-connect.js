@@ -1,3 +1,5 @@
+import React, { PureComponent } from 'react';
+
 import { NameSpace } from './event-hive/namespace';
 
 export class TestNameSpace extends NameSpace {
@@ -5,7 +7,12 @@ export class TestNameSpace extends NameSpace {
   lastEvent = null;
 
   constructor(name, schema, parent) {
-    super(name || 'TestNameSpace', schema && schema.stateDefinition(), parent, false);
+    super(
+      name || 'TestNameSpace',
+      schema && schema.stateDefinition(),
+      parent,
+      false
+    );
     this._sendStateUpdates = true;
   }
 
@@ -42,7 +49,7 @@ export class TestNameSpace extends NameSpace {
       const SignalComponent = class extends PureComponent {
         componentDidMount() {
           const { namespace } = this.props;
-  
+
           const listeners = connectorFn(
             state => this.setState(state),
             key => {
@@ -50,17 +57,17 @@ export class TestNameSpace extends NameSpace {
                 ...this.props,
                 ...this.state
               };
-  
+
               return key !== undefined ? values[key] : values;
             }
           );
           Control.withActor(this, namespace).listen(...listeners);
         }
-  
+
         componentWillUnmount() {
           Control.cleanup(this);
         }
-  
+
         render() {
           return renderFn(
             {
@@ -70,18 +77,18 @@ export class TestNameSpace extends NameSpace {
             () => Control.withActor(this, this.props.namespace)
           );
         }
-  
+
         state = {};
         displayName = `~${renderFn.name}`;
       };
       SignalComponent.displayName = `~$${renderFn.name}`;
-  
+
       const componentFn = props => (
         <SignalComponent {...props} namespace={NS} />
       );
       componentFn.displayName = `~${renderFn.name}`;
       return componentFn;
-    };  
+    };
   }
 }
 

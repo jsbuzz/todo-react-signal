@@ -16,7 +16,7 @@ export default ({ title }) => (
       schema={TodoSpace}
       name={`${title}Space`}
       services={[StateGuard, AppBridge]}
-      debug={false}
+      debug={true}
     >
       <section className="todoapp">
         <header className="header">

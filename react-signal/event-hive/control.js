@@ -58,11 +58,11 @@ const Control = {
     }
   },
   logRerender: (stateConnector, prop) => {
-    if (
-      !Control.logging &&
-      (!stateConnector._namespace || !stateConnector._namespace.logging)
-    )
-      return;
+    // if (
+    //   !Control.logging &&
+    //   (!stateConnector._namespace || !stateConnector._namespace.logging)
+    // )
+    //   return;
 
     console.log(
       INDENT +
