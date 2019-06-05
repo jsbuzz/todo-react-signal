@@ -104,3 +104,5 @@ Good examples can be found for
 ## Debugging
 
 React Signal is also built to be easily debuggable. Debug can be switched on for development and it will log every event trigger and what listeners were called from which component.
+
+![debug screenshot from console](https://github.com/jsbuzz/todo-react-signal/blob/master/images/Debug%20Screen%20Shot.png)
