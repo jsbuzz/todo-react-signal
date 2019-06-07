@@ -87,7 +87,7 @@ const TodoList = ({ todos }) => (
 export default Connect(TodoList, ({ todos }) => ({ todos }));
 ```
 
-Here the connector will generate a StateConnector wrapper that is listening to changes on Namespace's state. The second parameter is the mapStateToProps equivalent, but trialing an optimisation where the StateConnector will only re-render if any of the listed props have changed in the state. Redux is triggereing a rerender on all connected components every time anything changes in the state. This was implemented to avoid this and have less renders.
+Here the connector will generate a StateConnector wrapper that is listening to changes on Namespace's state. The second parameter is the mapStateToProps equivalent, but trialing an optimisation where the StateConnector will only re-render if any of the listed props have changed in the state. Redux is triggering a re-render on all connected components every time anything changes in the state. This would always trigger a Virtual DOM re-render as well for all functional components.
 
 ## Events
 
