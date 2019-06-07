@@ -20,6 +20,10 @@ The idea itself is a marriage between redux and FlightJs. It is meant to be a le
 
 Also React ~ Signal can handle async state changes out of the box as all events are async by nature. It offers less boilerplate and more flexibility than Redux, but of course it is easy in the prototype stage.
 
+**Note**
+The list style listener setup is quite a niche idea, not 100% yet that it will stay. I found it difficult to define events and their listeners with using the Event class as the key to listen for. And I wanted to avoid chaining lots of functions together to set up all the listeners.
+But in its current form it would need rules to integrate better with `prettier` otherwise it gets broken up to separate lines which looks much less readable.
+
 ## Namespaces
 
 Namespaces facilitate event triggering and listening. When an event is triggered inside a Namespace, every connected child component that is listening for that particular event will receive it.
@@ -51,6 +55,40 @@ export default ({ title }) => (
 It is currently being worked out if events should bounce up in the Namespace tree. It is possible to catch events and trigger them to the parent namespace by services in the meantime.
 
 
+## Connected components
+
+Components have to be connected to be able to access the namespace in the component tree. The `Connect` function can be used for both functional and class components. It has two main functions, provides access to the Namespace and can also connect the props to the Namespace state.
+
+Example for using the namespace to trigger events:
+
+```
+import Connect from 'react-signal';
+
+const DeleteButton = ({ id }, namespace) => (
+  <button onClick={() => namespace().trigger(RemoveTodo.with(id))}/>
+    X
+   </button>
+);
+
+export default Connect(DeleteButton);
+```
+
+The `namespace` parameter after the props is passed in by the connector. It has to be used as a function for now as this was the best way to make the underlying system operate better fetching and following all opreations.
+
+Example for connecting props to the state:
+```
+const TodoList = ({ todos }) => (
+  <ul className="todo-list">
+    {mapTodos(todos, todo => (
+      <TodoItem key={todo.id} todo={todo} />
+    ))}
+  </ul>
+  
+export default Connect(TodoList, ({ todos }) => ({ todos }));
+```
+
+Here the connector will generate a StateConnector wrapper that is listening to changes on Namespace's state. The second parameter is the mapStateToProps equivalent, but trialing an optimisation where the StateConnector will only re-render if any of the listed props have changed in the state. Redux is triggereing a rerender on all connected components every time anything changes in the state. This was implemented to avoid this and have less renders.
+
 ## Events
 
 Events are strongly typed and much more defined than redux actions or FlightJS events. Event data is also immutable by default to avoid problems when some listeners would cause errors by updating the event data for all the others.
@@ -58,16 +96,18 @@ Events are strongly typed and much more defined than redux actions or FlightJS e
 Events are identified by a name, which will be used by the namespaces to set listeners for. When an event is triggered a new instance is made that will be sent to all the listener functions inside the Namespace.
 
 ```
-export const AddTodoEvent = defineEventType({
+const AddTodoEvent = defineEventType({
   title: String
 });
+
+export const AddTodo = AddTodoEvent.withAlias('Todo:add');
 ```
 
 Similarly to propTypes for React Components events will have typed properties but they will throw runtime exceptions if initiated with the wrong payload.
 
 ## State
 
-State management is essential to React applications. Redux is a great library for this and Signal is not meant to replace that - it is using lots of core ideas from the Flux flow and Redux.
+State management is essential to React applications. Redux is a great library for this and Signal is not meant to replace it - it is using lots of core ideas from the Flux flow and Redux.
 
 When a namespace schema is defined, it comes with a state definition. State definitions are a list of properties inside the state, each defined as a set of listener functions similar to redux's reducers. At this stage it is not decided that reducers have to always generate a new state.
 
