@@ -2,7 +2,7 @@ import React from "react";
 import { AddTodo } from "../../signal/events";
 import { useNamespace } from "../../../react-signal/hooks";
 
-const NewTodo = _ => {
+const NewTodo = () => {
   const { trigger } = useNamespace(NewTodo);
 
   return (

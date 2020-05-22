@@ -1,6 +1,7 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from "react";
 
-import { NameSpace } from './event-hive/namespace';
+import { NameSpace } from "./event-hive/namespace";
+import * as testHooks from "./hooks";
 
 export class TestNameSpace extends NameSpace {
   events = [];
@@ -8,7 +9,7 @@ export class TestNameSpace extends NameSpace {
 
   constructor(name, schema, parent) {
     super(
-      name || 'TestNameSpace',
+      name || "TestNameSpace",
       schema && schema.stateDefinition(),
       parent,
       false
@@ -162,4 +163,10 @@ export const Signal = connectorFn => {
     componentFn.displayName = `~${renderFn.name}`;
     return componentFn;
   };
+};
+
+export const useTestNamespace = NS => {
+  jest.spyOn(testHooks, "useNamespace").mockImplementation(() => ({
+    trigger: (...a) => NS.trigger(...a)
+  }));
 };

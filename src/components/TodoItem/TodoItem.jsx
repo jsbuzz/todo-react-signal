@@ -1,22 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
+import { useNamespace } from "../../../react-signal/hooks";
 
-import { RemoveTodo, UpdateTodo } from '../../signal/events';
-import CheckBox from './CheckBox';
-import TitleEditor from './TitleEditor';
+import { RemoveTodo, UpdateTodo } from "../../signal/events";
+import CheckBox from "./CheckBox";
+import TitleEditor from "./TitleEditor";
 
-const TodoItem = ({ todo }, ns) => {
+const TodoItem = ({ todo }) => {
   const { id, title, done, edited } = todo;
+  const { trigger } = useNamespace(TodoItem);
+
   return (
     <li
-      className={(done ? 'todo completed' : 'todo') + (edited ? ' edited' : '')}
+      className={(done ? "todo completed" : "todo") + (edited ? " edited" : "")}
       onDoubleClick={() =>
-        ns().trigger(UpdateTodo.with({ id, title, done, edited: true }))
+        trigger(UpdateTodo.with({ id, title, done, edited: true }))
       }
     >
       <CheckBox
         onChange={() =>
-          ns().trigger(UpdateTodo.with({ id, title, edited, done: !done }))
+          trigger(UpdateTodo.with({ id, title, edited, done: !done }))
         }
         done={done}
       />
@@ -25,7 +28,7 @@ const TodoItem = ({ todo }, ns) => {
       <button
         type="button"
         className="destroy"
-        onClick={() => ns().trigger(RemoveTodo.with(id))}
+        onClick={() => trigger(RemoveTodo.with(id))}
       />
     </li>
   );
