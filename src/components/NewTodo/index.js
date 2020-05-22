@@ -1,4 +1,3 @@
-import Connect from '../../../react-signal';
-import NewTodo from './NewTodo';
+import NewTodo from "./NewTodo";
 
-export default Connect(NewTodo);
+export default NewTodo;
