@@ -12,7 +12,7 @@ const TodoItem = ({ todo }) => {
 
   return (
     <li
-      className={(done ? "todo completed" : "todo") + (edited ? " edited" : "")}
+      className={`todo${done ? " completed" : ""}${edited ? " edited" : ""}`}
       onDoubleClick={() =>
         trigger(UpdateTodo.with({ id, title, done, edited: true }))
       }

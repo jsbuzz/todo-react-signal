@@ -1,14 +1,14 @@
-import { basicEvent } from './event';
+import { basicEvent } from "./event";
 // import { defineEventType } from './event-type';
-import { EventGateway } from './event-gateway';
-import ReadOnly from './dependencies/read-only';
-import Control from './control';
+import { EventGateway } from "./event-gateway";
+import ReadOnly from "./dependencies/read-only";
+import Control from "./control";
 
 // export const StateEvent = defineEventType({
 //     state: Object,
 // });
-export const InitState = basicEvent('NameSpace:InitState');
-export const StateChanged = basicEvent('NameSpace:StateChanged');
+export const InitState = basicEvent("NameSpace:InitState");
+export const StateChanged = basicEvent("NameSpace:StateChanged");
 // export const StateChanged = defineEvent(StateEvent, 'NameSpace:StateChanged');
 
 let __id = 0;
@@ -111,6 +111,15 @@ export class NameSpace extends EventGateway {
     generator.stateDefinition = stateDefinition;
     return generator;
   }
+
+  static schema2(initialState) {
+    const generator = (name, parent, logging) =>
+      new NameSpace(name, initialState, parent, readonly, logging);
+
+    generator.initialState = initialState;
+    generator.addReducer = () => generator;
+    return generator;
+  }
 }
 
 export const set = value => () => () => value;
@@ -119,4 +128,4 @@ export const modify = fn => value => payload => {
   return value;
 };
 
-export const RootNameSpace = new NameSpace('NameSpace:Root');
+export const RootNameSpace = new NameSpace("NameSpace:Root");

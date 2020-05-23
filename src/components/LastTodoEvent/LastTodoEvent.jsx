@@ -1,22 +1,36 @@
-import React, { PureComponent } from 'react';
-import { AllEvents } from '../../../react-signal';
+import React, { PureComponent } from "react";
+import { AllEvents } from "../../../react-signal";
+import { useListeners } from "../../../react-signal/hooks";
+import { AddTodo } from "../../signal/events";
 
-class LastTodoEvent extends PureComponent {
-  componentDidMount() {
-    const isTodoEvent = event => event.name.toLowerCase().includes('todo');
+const isTodoEvent = event => event.name.toLowerCase().includes("todo");
 
-    this.namespace().listen(
-      AllEvents, event => isTodoEvent(event) && this.setState({ lastEvent: event.name })
-    );
-  }
+// class LastTodoEventOld extends PureComponent {
+//   componentDidMount() {
+//     this.namespace().listen(
+//       AllEvents,
+//       event => isTodoEvent(event) && this.setState({ lastEvent: event.name })
+//     );
+//   }
 
-  render() {
-    const { lastEvent } = this.state;
+//   render() {
+//     const { lastEvent } = this.state;
 
-    return (<div>Last event triggered: {lastEvent}</div>);
-  }
+//     return <div>Last event triggered: {lastEvent}</div>;
+//   }
 
-  state = { lastEvent: null };
-}
+//   state = { lastEvent: null };
+// }
+
+// export default LastTodoEventOld;
+
+const LastTodoEvent = () => {
+  const { state } = useListeners(LastTodoEvent)(setState => [
+    AllEvents,
+    event => isTodoEvent(event) && setState({ lastEvent: event.name })
+  ]);
+
+  return <div>Last event triggered: {state.lastEvent}</div>;
+};
 
 export default LastTodoEvent;
