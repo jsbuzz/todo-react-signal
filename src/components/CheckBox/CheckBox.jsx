@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 const CheckBox = ({ done, onChange }) => (
   <input
@@ -12,7 +12,7 @@ const CheckBox = ({ done, onChange }) => (
 
 CheckBox.propTypes = {
   done: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 export default CheckBox;

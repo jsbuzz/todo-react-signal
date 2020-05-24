@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useNamespace } from "../../../react-signal/hooks";
 
 import { RemoveTodo, UpdateTodo } from "../../signal/events";
-import CheckBox from "./CheckBox";
+import CheckBox from "../CheckBox";
 import TitleEditor from "./TitleEditor";
 
 const TodoItem = ({ todo }) => {

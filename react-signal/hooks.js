@@ -6,6 +6,11 @@ const UnknownActor = {
   name: "~Unknown"
 };
 
+const getInstance = Component => ({
+  name: Component.name || Component.displayName,
+  __listeners: []
+});
+
 export function useNamespace(component) {
   const namespace = useContext(NamespaceCtx);
 
@@ -15,21 +20,20 @@ export function useNamespace(component) {
   };
 }
 
-export function useListeners(component) {
-  return listener$ => {
-    const namespace = useContext(NamespaceCtx);
-    const [state, setState] = useState({});
+export const useListeners = Component => (...listeners) => {
+  const namespace = useContext(NamespaceCtx);
 
-    const listeners = listener$(setState);
+  useEffect(() => {
+    const instance = getInstance(Component);
+    Control.withActor(instance, namespace).listen(...listeners);
 
-    useEffect(() => {
-      Control.withActor(component, namespace).listen(...listeners);
+    return function cleanup() {
+      Control.cleanup(instance);
+    };
+  }, []);
 
-      return function cleanup() {
-        Control.cleanup(component);
-      };
-    });
-
-    return { state };
+  return {
+    trigger: (...a) =>
+      Control.withActor(Component || UnknownActor, namespace).trigger(...a)
   };
-}
+};

@@ -1,7 +1,7 @@
-import React from 'react';
-import { basicEvent } from '../../../react-signal/event-hive/event';
+import React from "react";
+import { basicEvent } from "../../../react-signal/event-hive/event";
 
-export const ToggleEvent = name => basicEvent(`Toggle:${name}`);
+const ToggleEvent = name => basicEvent(`Toggle:${name}`);
 
 export const Toggle = ({ show, children, name }, ns) => (
   <div>
@@ -13,3 +13,8 @@ export const Toggle = ({ show, children, name }, ns) => (
     {show && children}
   </div>
 );
+
+export const ToggleListener = (get, set) => [
+  ToggleEvent(get("name")),
+  () => set({ show: !get("show") })
+];
