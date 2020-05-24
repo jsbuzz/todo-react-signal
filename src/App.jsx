@@ -1,18 +1,19 @@
-import React from 'react';
-import NameSpace from '../react-signal/NameSpace';
+import React from "react";
+import NameSpace from "../react-signal/NameSpace";
 
-import AppSpace from './signal/AppSpace';
+import AppSpace from "./signal/AppSpace";
 
-import Summary from './components/Summary';
-import TodoApp from './components/TodoApp';
+import Summary from "./components/Summary";
+import TodoApp from "./components/TodoApp";
 
-import Toggle from './components/Toggle';
-import LastTodoEvent from './components/LastTodoEvent';
-import LastOperation from './components/LastOperation';
+import Toggle from "./components/Toggle";
+import LastTodoEvent from "./components/LastTodoEvent";
+import LastOperation from "./components/LastOperation";
 
 export default () => (
   <NameSpace schema={AppSpace} name="AppSpace" debug={true}>
     <Summary />
+    <LastTodoEvent />
     <LastTodoEvent />
     <Toggle name="work" show={true}>
       <LastOperation target="Work" />
@@ -22,5 +23,6 @@ export default () => (
     </Toggle>
     <TodoApp title="Work" />
     <TodoApp title="Home" />
+    <LastTodoEvent />
   </NameSpace>
 );

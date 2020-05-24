@@ -1,7 +1,4 @@
-import { Signal } from '../../../react-signal';
-import { ToggleEvent, Toggle } from './Toggle';
+import { Signal } from "../../../react-signal";
+import { ToggleListener, Toggle } from "./Toggle";
 
-export default Signal((get, set) => [
-  ToggleEvent(get('name')),
-  () => set({ show: !get('show') })
-])(Toggle);
+export default Signal(ToggleListener)(Toggle);

@@ -1,5 +1,5 @@
-const ARROW = '--> ';
-const INDENT = '    ';
+const ARROW = "--> ";
+const INDENT = "    ";
 
 const Control = {
   logging: false,
@@ -25,14 +25,14 @@ const Control = {
   logTriggerSync: (hiveEvent, gateway) => {
     if (!Control.logging && !gateway.logging) return;
 
-    if (hiveEvent.name === 'NameSpace:StateChanged') {
+    if (hiveEvent.name === "NameSpace:StateChanged") {
       console.log(
         `${Control.actor.name} triggered ${hiveEvent.name} ${Control.actor
           ._propsChanged || []}`
       );
     } else {
       const componentName =
-        Control.actor.name || Control.actor.displayName || 'Component';
+        Control.actor.name || Control.actor.displayName || "Component";
       console.log(
         `${componentName} triggered ${hiveEvent.name} on ${gateway.name}`
       );
@@ -43,7 +43,7 @@ const Control = {
 
     if (
       actor.displayName &&
-      actor.displayName.substr(0, 15) === 'StateConnector('
+      actor.displayName.substr(0, 15) === "StateConnector("
     ) {
       console.log(
         ARROW + `${actor.displayName} checking changes <-[${event.name}]`
@@ -74,7 +74,7 @@ const Control = {
 export default Control;
 
 function fnName(fn) {
-  const propName = fn._property ? `<${fn._property}>` : '';
+  const propName = fn._property ? `<${fn._property}>` : "";
 
   if (fn.name) return fn.name + propName;
 
@@ -83,9 +83,9 @@ function fnName(fn) {
     const functionNames = fn.toString().match(/[a-zA-Z_]+\([^)]*\)/g);
 
     if (functionNames && functionNames.length) {
-      return "'" + functionNames.map(n => n.split('(')[0]).join('|') + "'";
+      return "'" + functionNames.map(n => n.split("(")[0]).join("|") + "'";
     }
   }
 
-  return def && def.length > 1 ? `'${def[1]}${propName}'` : 'inline callback';
+  return def && def.length > 1 ? `'${def[1]}${propName}'` : "inline callback";
 }
