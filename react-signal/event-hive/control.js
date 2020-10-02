@@ -12,10 +12,10 @@ const Control = {
     (Control.actor.__listeners || (Control.actor.__listeners = [])).push({
       eventPool,
       eventName,
-      listener
+      listener,
     });
   },
-  cleanup: actor => {
+  cleanup: (actor) => {
     if (!actor.__listeners) return;
 
     actor.__listeners.forEach(({ eventPool, eventName, listener }) => {
@@ -69,7 +69,16 @@ const Control = {
       INDENT +
         `${stateConnector.displayName} re-rendering because "${prop}" changed`
     );
-  }
+  },
+  logEventCancelled: (event) => {
+    if (!Control.logging && !event._gateway.logging) return;
+
+    console.log(
+      `!! ${Control.actor.displayName || Control.actor.name} cancelled event [${
+        event.name
+      }]`
+    );
+  },
 };
 
 export default Control;
@@ -84,7 +93,7 @@ function fnName(fn) {
     const functionNames = fn.toString().match(/[a-zA-Z_]+\([^)]*\)/g);
 
     if (functionNames && functionNames.length) {
-      return "'" + functionNames.map(n => n.split("(")[0]).join("|") + "'";
+      return "'" + functionNames.map((n) => n.split("(")[0]).join("|") + "'";
     }
   }
 

@@ -1,3 +1,5 @@
+import Control from "./control";
+
 let eventId = 0;
 
 export const AllEvents = {};
@@ -8,6 +10,7 @@ export class Event {
   }
 
   cancel() {
+    Control.logEventCancelled(this);
     this.__cancelled = true;
   }
 

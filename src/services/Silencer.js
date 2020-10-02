@@ -4,7 +4,6 @@ import { AllEvents } from "../../react-signal/event-hive/event";
 class Silencer extends Service {
   listen() {
     this.namespace().listen(AllEvents, (event) => {
-      console.log("silcenced event", event);
       event.cancel();
     });
   }

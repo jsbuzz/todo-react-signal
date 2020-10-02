@@ -14,6 +14,7 @@ class ListenerChain {
 
     Control.logCallback(this.actor, this.listener, event);
 
+    Control.actor = this.actor;
     this.listener(event);
     if (this.next) {
       this.next.execute(event);
