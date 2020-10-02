@@ -1,4 +1,4 @@
-import Control from './control';
+import Control from "./control";
 
 class ListenerChain {
   constructor(listener, next = null) {
@@ -8,6 +8,10 @@ class ListenerChain {
   }
 
   execute(event) {
+    if (event.__cancelled) {
+      return;
+    }
+
     Control.logCallback(this.actor, this.listener, event);
 
     this.listener(event);

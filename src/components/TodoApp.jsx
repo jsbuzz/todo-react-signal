@@ -1,13 +1,14 @@
-import React from 'react';
-import NameSpace from '../../react-signal/NameSpace';
+import React from "react";
+import NameSpace from "../../react-signal/NameSpace";
 
-import TodoSpace from '../signal/TodoSpace';
+import TodoSpace from "../signal/TodoSpace";
 
-import NewTodo from './NewTodo';
-import TodoList from './TodoList';
+import NewTodo from "./NewTodo";
+import TodoList from "./TodoList";
 
-import StateGuard from '../services/StateGuard';
-import AppBridge from '../services/AppBridge';
+import StateGuard from "../services/StateGuard";
+import AppBridge from "../services/AppBridge";
+//import Silencer from "../services/Silencer";
 
 export default ({ title }) => (
   <>
@@ -15,7 +16,7 @@ export default ({ title }) => (
     <NameSpace
       schema={TodoSpace}
       name={`${title}Space`}
-      services={[StateGuard, AppBridge]}
+      services={[StateGuard, AppBridge /*, Silencer*/]}
       debug={true}
     >
       <section className="todoapp">

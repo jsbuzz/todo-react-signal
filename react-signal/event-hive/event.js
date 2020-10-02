@@ -7,6 +7,10 @@ export class Event {
     this.name = this.constructor.EventName;
   }
 
+  cancel() {
+    this.__cancelled = true;
+  }
+
   static alias(name) {
     this.EventName = name;
     return this;
