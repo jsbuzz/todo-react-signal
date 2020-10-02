@@ -31,6 +31,7 @@ export const LastOperation = ({ target }) => {
       isTarget(_origin) &&
       setOperation(`Restored ${savedTodos.length} items from cache`)
   );
+
   return (
     <span>
       Last operation on {target}: <strong>{state.operation}</strong>
