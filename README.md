@@ -2,15 +2,19 @@
 
 Example application to develop the prototype of the React-Signal library.
 
-Created with `create-react-app` so for running locally all you need is:
-1) yarn
-2) yarn start
+To start you can use either yarn or npm
+
+```
+yarn
+yarn start
+```
 
 or
 
-1) npm install
-2) npm start
-
+```
+npm install
+npm start
+```
 
 # React ~ Signal
 
