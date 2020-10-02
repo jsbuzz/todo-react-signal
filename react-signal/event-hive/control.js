@@ -21,6 +21,7 @@ const Control = {
     actor.__listeners.forEach(({ eventPool, eventName, listener }) => {
       eventPool.removeEventListener(eventName, listener);
     });
+    delete actor.__listeners;
   },
   logTriggerSync: (hiveEvent, gateway) => {
     if (!Control.logging && !gateway.logging) return;
@@ -58,11 +59,11 @@ const Control = {
     }
   },
   logRerender: (stateConnector, prop) => {
-    // if (
-    //   !Control.logging &&
-    //   (!stateConnector._namespace || !stateConnector._namespace.logging)
-    // )
-    //   return;
+    if (
+      !Control.logging &&
+      (!stateConnector._namespace || !stateConnector._namespace.logging)
+    )
+      return;
 
     console.log(
       INDENT +

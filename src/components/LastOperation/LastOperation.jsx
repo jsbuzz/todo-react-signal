@@ -13,7 +13,7 @@ export const LastOperation = ({ target }) => {
   const [state, setState] = useState({});
   const setOperation = operation => setState({ operation });
 
-  useListeners(LastOperation)(
+  useListeners(
     AddTodo,
     ({ title, _origin }) =>
       isTarget(_origin) && setOperation(`Added: "${title}"`),
@@ -31,6 +31,7 @@ export const LastOperation = ({ target }) => {
       isTarget(_origin) &&
       setOperation(`Restored ${savedTodos.length} items from cache`)
   );
+
   return (
     <span>
       Last operation on {target}: <strong>{state.operation}</strong>

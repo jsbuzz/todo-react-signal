@@ -14,7 +14,6 @@ export default () => (
   <NameSpace schema={AppSpace} name="AppSpace" debug={true}>
     <Summary />
     <LastTodoEvent />
-    <LastTodoEvent />
     <Toggle name="work" show={true}>
       <LastOperation target="Work" />
     </Toggle>
@@ -23,6 +22,5 @@ export default () => (
     </Toggle>
     <TodoApp title="Work" />
     <TodoApp title="Home" />
-    <LastTodoEvent />
   </NameSpace>
 );

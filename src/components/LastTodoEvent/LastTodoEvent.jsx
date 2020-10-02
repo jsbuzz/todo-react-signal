@@ -6,7 +6,7 @@ const isTodoEvent = event => event.name.toLowerCase().includes("todo");
 
 const LastTodoEvent = () => {
   const [state, setState] = useState({ lastEvent: "-" });
-  useListeners(LastTodoEvent)(
+  useListeners(
     AllEvents,
     event => isTodoEvent(event) && setState({ lastEvent: event.name })
   );

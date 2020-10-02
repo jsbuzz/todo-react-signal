@@ -8,7 +8,7 @@ import TitleEditor from "./TitleEditor";
 
 const TodoItem = ({ todo }) => {
   const { id, title, done, edited } = todo;
-  const { trigger } = useNamespace(TodoItem);
+  const { trigger } = useNamespace();
 
   return (
     <li
