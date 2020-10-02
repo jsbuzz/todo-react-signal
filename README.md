@@ -121,6 +121,22 @@ export const LastOperation = () => {
 };
 ```
 
+## Services
+
+Services are like components that have no UI element. They only interact through events. They listen to events and fire events. In the first implementation they are classes that extend the **Service** base class from react-signal. But they could be ported to simple functions later if necessary.
+
+Example: [StateGuard Service](https://github.com/jsbuzz/todo-react-signal/blob/master/src/services/StateGuard.js)
+
+The signature is the following
+
+### listen
+
+This function will be called when the service is connected to the NameSpace. It is only called once on startup and sets up all the listeners. It is done in a way that Services will have priority and access the events before any of the components do. In case we want to cancel an event before it gets to the components. Although it is worth noting that the Services will receive the events after the State engine, so state changes connected to an event cannot be avoided.
+
+### destructor
+
+The destructor will be called when the Service is disconnected from the NameSpace, in case any further cleanup steps are needed.
+
 
 ## Connected components
 
