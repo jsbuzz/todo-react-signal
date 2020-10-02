@@ -60,5 +60,8 @@ typings/
 # next.js build output
 .next
 
+# yarn lockfile
+yarn.lock
+
 # freakin .DS_Store
 .DS_Store
