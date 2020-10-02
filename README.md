@@ -59,9 +59,72 @@ export default ({ title }) => (
 It is currently being worked out if events should bubble up in the Namespace tree. It is possible to catch events and trigger them to the parent namespace by services in the meantime.
 
 
+## Hooks
+
+The easiest way to interact with the current Namespace is by hooks. These hooks are based on the useContext React hook.
+
+### useNamespace
+
+This hook is providing an interface to the current Namespace. In the first iteration it only returns a trigger function that can be safely used to trigger any event inside the current NameSpace with the debugger properly tracing the event back to the Component.
+
+```
+const NewTodo = () => {
+  const { trigger } = useNamespace();
+
+  return (
+    <input
+      placeholder="What needs to be done?"
+      className="new-todo"
+      onKeyUp={({ currentTarget, keyCode }) => {
+        if (keyCode === 13 && currentTarget.value.length) {
+          trigger(AddTodo.with(currentTarget.value));
+          currentTarget.value = "";
+        } else if (keyCode === 27) {
+          currentTarget.value = "";
+        }
+      }}
+    />
+  );
+};
+ ```
+
+
+
+### useListeners
+
+Based on the React useEffect hook *useListeners* will set event listeners on the current NameSpace and call the provided function when those events trigger.
+
+```
+export const LastOperation = () => {
+  const [state, setState] = useState({});
+  const setOperation = operation => setState({ operation });
+
+  useListeners(
+    AddTodo,
+    ({ title }) => setOperation(`Added: "${title}"`),
+
+    RemoveTodo,
+    ({ id }) => setOperation(`Removed: #${id}`),
+
+    UpdateTodo,
+    ({ todo: { id, done } }) => setOperation(`Updated: #${id}: ${done ? "done" : "active"}`),
+
+    RestoreTodos,
+    ({ savedTodos }) => setOperation(`Restored ${savedTodos.length} items from cache`)
+  );
+  
+  return (
+    <span>
+      Last operation: <strong>{state.operation}</strong>
+    </span>
+  );
+};
+```
+
+
 ## Connected components
 
-Components have to be connected to be able to access the namespace in the component tree. The `Connect` function can be used for both functional and class components. It has two main responsibilities, provides access to the Namespace and can also connect the props to the Namespace state.
+Components can also be connected to be able to access the namespace in the component tree. The `Connect` function can be used for both functional and class components. It has two main responsibilities, provides access to the Namespace and can also connect the props to the Namespace state.
 
 Example for using the namespace to trigger events:
 
