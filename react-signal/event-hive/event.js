@@ -1,3 +1,5 @@
+import Control from "./control";
+
 let eventId = 0;
 
 export const AllEvents = {};
@@ -5,6 +7,11 @@ export const AllEvents = {};
 export class Event {
   constructor() {
     this.name = this.constructor.EventName;
+  }
+
+  cancel() {
+    Control.logEventCancelled(this);
+    this.__cancelled = true;
   }
 
   static alias(name) {
